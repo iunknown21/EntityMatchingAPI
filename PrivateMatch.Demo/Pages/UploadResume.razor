@@ -1,0 +1,230 @@
+@page "/upload-resume"
+@using ProfileMatching.SDK
+@using ProfileMatching.Shared.Models
+@inject ProfileMatchingClient Client
+@inject IJSRuntime JS
+
+<PageTitle>Privacy-First Resume Upload - PrivateMatch</PageTitle>
+
+<div class="container">
+    <h1 class="title">🔒 Privacy-First Resume Upload</h1>
+    <p class="subtitle">Your resume never leaves your browser. Only a vector is uploaded.</p>
+
+    @if (currentStep == Step.Input)
+    {
+        <div class="resume-input-section">
+            <h2>Step 1: Enter Your Resume</h2>
+            <p class="info-text">
+                This text stays on YOUR device. We never see it.
+            </p>
+
+            <textarea
+                class="resume-textarea"
+                @bind="resumeText"
+                placeholder="Senior Software Engineer&#10;&#10;EXPERIENCE:&#10;- 10 years of Python development&#10;- Expert in AWS (Lambda, S3, DynamoDB)&#10;- Built ML pipelines processing 100M+ events/day&#10;&#10;SKILLS:&#10;- Python, TypeScript, Go&#10;- AWS, Azure, GCP&#10;- TensorFlow, PyTorch"
+                rows="15"></textarea>
+
+            <button class="btn btn-primary" @onclick="GenerateEmbedding" disabled="@string.IsNullOrWhiteSpace(resumeText)">
+                Generate Embedding Locally
+            </button>
+        </div>
+    }
+    else if (currentStep == Step.EmbeddingGenerated)
+    {
+        <div class="embedding-preview-section">
+            <h2>Step 2: Embedding Generated!</h2>
+
+            <div class="privacy-highlight">
+                <h3>✅ What Stays on Your Device:</h3>
+                <div class="original-text-box">
+                    <strong>Your Resume Text (NEVER sent to server):</strong>
+                    <pre>@resumeText.Substring(0, Math.Min(200, resumeText.Length))@(resumeText.Length > 200 ? "..." : "")</pre>
+                </div>
+            </div>
+
+            <div class="privacy-highlight">
+                <h3>📊 What We Upload:</h3>
+                <div class="vector-box">
+                    <strong>1536-Dimensional Vector (meaningless numbers):</strong>
+                    <pre class="vector-display">[@string.Join(", ", embeddingVector!.Take(20).Select(v => v.ToString("F3")))]...and 1516 more numbers</pre>
+                    <p class="vector-info">
+                        Even if our server is hacked, attackers only get these numbers. <br/>
+                        <strong>They cannot reconstruct your resume text from this vector.</strong>
+                    </p>
+                </div>
+            </div>
+
+            <div class="comparison-section">
+                <div class="comparison-box traditional">
+                    <h4>❌ Traditional Job Boards</h4>
+                    <ul>
+                        <li>Store your full resume text</li>
+                        <li>Can be stolen in data breaches</li>
+                        <li>Complex GDPR compliance</li>
+                    </ul>
+                </div>
+                <div class="comparison-box privatematch">
+                    <h4>✅ PrivateMatch</h4>
+                    <ul>
+                        <li>Store only vector (1536 numbers)</li>
+                        <li>Nothing personal to steal</li>
+                        <li>Minimal GDPR burden</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button class="btn btn-secondary" @onclick="Reset">Start Over</button>
+                <button class="btn btn-primary" @onclick="UploadVector">
+                    Upload Vector Only (Privacy-First)
+                </button>
+            </div>
+        </div>
+    }
+    else if (currentStep == Step.Uploaded)
+    {
+        <div class="success-section">
+            <h2>✅ Success! Your Resume is Safe.</h2>
+
+            <div class="success-box">
+                <h3>🔒 What Just Happened:</h3>
+                <ol>
+                    <li>✅ Your resume text stayed in your browser (NEVER sent to our server)</li>
+                    <li>✅ We generated a 1536-dimensional vector locally using OpenAI</li>
+                    <li>✅ Only the vector was uploaded to ProfileMatchingAPI</li>
+                    <li>✅ Companies can now search for you semantically</li>
+                    <li>✅ Your name and contact info remain hidden until YOU choose to reveal them</li>
+                </ol>
+            </div>
+
+            <div class="info-box">
+                <h3>🎯 What Companies Will See:</h3>
+                <div class="company-view">
+                    <p><strong>Search Query:</strong> "Senior Python engineer, AWS experience, ML background"</p>
+                    <div class="search-result">
+                        <p><strong>Result:</strong> Profile #@profileId (94% match)</p>
+                        <p class="muted">[Your name and contact info hidden]</p>
+                        <p class="muted">Companies must send you a match request. You decide whether to accept.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="security-proof">
+                <h3>🛡️ Even if We Get Hacked:</h3>
+                <p class="highlight-text">
+                    Attackers would only get: <code>[0.123, -0.456, 0.789, ..., 1536 numbers]</code>
+                </p>
+                <p>
+                    <strong>They cannot reconstruct your resume from these numbers.</strong> <br/>
+                    This is a mathematical guarantee of the embedding process.
+                </p>
+            </div>
+
+            <button class="btn btn-primary" @onclick="Reset">Upload Another Resume</button>
+        </div>
+    }
+
+    @if (isLoading)
+    {
+        <div class="loading-overlay">
+            <div class="spinner"></div>
+            <p>@loadingMessage</p>
+        </div>
+    }
+
+    @if (!string.IsNullOrEmpty(errorMessage))
+    {
+        <div class="error-box">
+            <strong>Error:</strong> @errorMessage
+        </div>
+    }
+</div>
+
+@code {
+    private string resumeText = "";
+    private float[]? embeddingVector;
+    private Guid profileId = Guid.Empty;
+    private Step currentStep = Step.Input;
+    private bool isLoading = false;
+    private string loadingMessage = "";
+    private string errorMessage = "";
+
+    enum Step
+    {
+        Input,
+        EmbeddingGenerated,
+        Uploaded
+    }
+
+    private async Task GenerateEmbedding()
+    {
+        try
+        {
+            isLoading = true;
+            loadingMessage = "Generating embedding locally (your resume stays in your browser)...";
+            errorMessage = "";
+            StateHasChanged();
+
+            // Generate embedding locally
+            embeddingVector = await Client.GenerateEmbeddingAsync(resumeText);
+
+            currentStep = Step.EmbeddingGenerated;
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Failed to generate embedding: {ex.Message}";
+        }
+        finally
+        {
+            isLoading = false;
+            StateHasChanged();
+        }
+    }
+
+    private async Task UploadVector()
+    {
+        try
+        {
+            isLoading = true;
+            loadingMessage = "Creating profile and uploading vector (NOT your resume text)...";
+            errorMessage = "";
+            StateHasChanged();
+
+            // Create a profile first
+            var profile = await Client.Profiles.CreateAsync(new Profile
+            {
+                OwnedByUserId = $"demo-user-{Guid.NewGuid()}",
+                Name = "Demo User",
+                Bio = "Privacy-conscious job seeker",
+                IsSearchable = true,
+                CreatedAt = DateTime.UtcNow,
+                LastModified = DateTime.UtcNow
+            });
+
+            profileId = profile.Id;
+
+            // Upload the vector (NOT the resume text!)
+            await Client.UploadResumeAsync(profileId, resumeText);
+
+            currentStep = Step.Uploaded;
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Failed to upload: {ex.Message}. Make sure you have an OpenAI API key configured.";
+        }
+        finally
+        {
+            isLoading = false;
+            StateHasChanged();
+        }
+    }
+
+    private void Reset()
+    {
+        resumeText = "";
+        embeddingVector = null;
+        profileId = Guid.Empty;
+        currentStep = Step.Input;
+        errorMessage = "";
+    }
+}

@@ -1,0 +1,1708 @@
+[
+  {
+    "name": "AdminProcessEmbeddingsOptions",
+    "scriptFile": "ProfileMatching.Functions.dll",
+    "entryPoint": "ProfileMatching.Functions.AdminFunctions.AdminProcessEmbeddingsOptions",
+    "language": "dotnet-isolated",
+    "properties": {
+      "IsCodeless": false
+    },
+    "bindings": [
+      {
+        "name": "req",
+        "direction": "In",
+        "type": "httpTrigger",
+        "authLevel": "Function",
+        "methods": [
+          "options"
+        ],
+        "route": "admin/embeddings/process",
+        "properties": {}
+      },
+      {
+        "name": "$return",
+        "type": "http",
+        "direction": "Out"
+      }
+    ]
+  },
+  {
+    "name": "AdminProcessEmbeddings",
+    "scriptFile": "ProfileMatching.Functions.dll",
+    "entryPoint": "ProfileMatching.Functions.AdminFunctions.ProcessEmbeddings",
+    "language": "dotnet-isolated",
+    "properties": {
+      "IsCodeless": false
+    },
+    "bindings": [
+      {
+        "name": "req",
+        "direction": "In",
+        "type": "httpTrigger",
+        "authLevel": "Function",
+        "methods": [
+          "post"
+        ],
+        "route": "admin/embeddings/process",
+        "properties": {}
+      },
+      {
+        "name": "$return",
+        "type": "http",
+        "direction": "Out"
+      }
+    ]
+  },
+  {
+    "name": "AdminGetEmbeddingStatusOptions",
+    "scriptFile": "ProfileMatching.Functions.dll",
+    "entryPoint": "ProfileMatching.Functions.AdminFunctions.AdminGetEmbeddingStatusOptions",
+    "language": "dotnet-isolated",
+    "properties": {
+      "IsCodeless": false
+    },
+    "bindings": [
+      {
+        "name": "req",
+        "direction": "In",
+        "type": "httpTrigger",
+        "authLevel": "Function",
+        "methods": [
+          "options"
+        ],
+        "route": "admin/embeddings/status",
+        "properties": {}
+      },
+      {
+        "name": "$return",
+        "type": "http",
+        "direction": "Out"
+      }
+    ]
+  },
+  {
+    "name": "AdminGetEmbeddingStatus",
+    "scriptFile": "ProfileMatching.Functions.dll",
+    "entryPoint": "ProfileMatching.Functions.AdminFunctions.GetEmbeddingStatus",
+    "language": "dotnet-isolated",
+    "properties": {
+      "IsCodeless": false
+    },
+    "bindings": [
+      {
+        "name": "req",
+        "direction": "In",
+        "type": "httpTrigger",
+        "authLevel": "Function",
+        "methods": [
+          "get"
+        ],
+        "route": "admin/embeddings/status",
+        "properties": {}
+      },
+      {
+        "name": "$return",
+        "type": "http",
+        "direction": "Out"
+      }
+    ]
+  },
+  {
+    "name": "AdminCreateTestEntitiesOptions",
+    "scriptFile": "ProfileMatching.Functions.dll",
+    "entryPoint": "ProfileMatching.Functions.AdminFunctions.AdminCreateTestEntitiesOptions",
+    "language": "dotnet-isolated",
+    "properties": {
+      "IsCodeless": false
+    },
+    "bindings": [
+      {
+        "name": "req",
+        "direction": "In",
+        "type": "httpTrigger",
+        "authLevel": "Function",
+        "methods": [
+          "options"
+        ],
+        "route": "admin/test-data/profiles",
+        "properties": {}
+      },
+      {
+        "name": "$return",
+        "type": "http",
+        "direction": "Out"
+      }
+    ]
+  },
+  {
+    "name": "AdminCreateTestEntities",
+    "scriptFile": "ProfileMatching.Functions.dll",
+    "entryPoint": "ProfileMatching.Functions.AdminFunctions.CreateTestEntities",
+    "language": "dotnet-isolated",
+    "properties": {
+      "IsCodeless": false
+    },
+    "bindings": [
+      {
+        "name": "req",
+        "direction": "In",
+        "type": "httpTrigger",
+        "authLevel": "Function",
+        "methods": [
+          "post"
+        ],
+        "route": "admin/test-data/profiles",
+        "properties": {}
+      },
+      {
+        "name": "$return",
+        "type": "http",
+        "direction": "Out"
+      }
+    ]
+  },
+  {
+    "name": "AdminGetEmbeddingOptions",
+    "scriptFile": "ProfileMatching.Functions.dll",
+    "entryPoint": "ProfileMatching.Functions.AdminFunctions.AdminGetEmbeddingOptions",
+    "language": "dotnet-isolated",
+    "properties": {
+      "IsCodeless": false
+    },
+    "bindings": [
+      {
+        "name": "req",
+        "direction": "In",
+        "type": "httpTrigger",
+        "authLevel": "Function",
+        "methods": [
+          "options"
+        ],
+        "route": "admin/embeddings/{entityId}",
+        "properties": {}
+      },
+      {
+        "name": "$return",
+        "type": "http",
+        "direction": "Out"
+      }
+    ]
+  },
+  {
+    "name": "AdminGetEmbedding",
+    "scriptFile": "ProfileMatching.Functions.dll",
+    "entryPoint": "ProfileMatching.Functions.AdminFunctions.GetEmbedding",
+    "language": "dotnet-isolated",
+    "properties": {
+      "IsCodeless": false
+    },
+    "bindings": [
+      {
+        "name": "req",
+        "direction": "In",
+        "type": "httpTrigger",
+        "authLevel": "Function",
+        "methods": [
+          "get"
+        ],
+        "route": "admin/embeddings/{entityId}",
+        "properties": {}
+      },
+      {
+        "name": "$return",
+        "type": "http",
+        "direction": "Out"
+      }
+    ]
+  },
+  {
+    "name": "AdminRegenerateEmbeddingOptions",
+    "scriptFile": "ProfileMatching.Functions.dll",
+    "entryPoint": "ProfileMatching.Functions.AdminFunctions.AdminRegenerateEmbeddingOptions",
+    "language": "dotnet-isolated",
+    "properties": {
+      "IsCodeless": false
+    },
+    "bindings": [
+      {
+        "name": "req",
+        "direction": "In",
+        "type": "httpTrigger",
+        "authLevel": "Function",
+        "methods": [
+          "options"
+        ],
+        "route": "admin/embeddings/{entityId}/regenerate",
+        "properties": {}
+      },
+      {
+        "name": "$return",
+        "type": "http",
+        "direction": "Out"
+      }
+    ]
+  },
+  {
+    "name": "AdminRegenerateEmbedding",
+    "scriptFile": "ProfileMatching.Functions.dll",
+    "entryPoint": "ProfileMatching.Functions.AdminFunctions.RegenerateEmbedding",
+    "language": "dotnet-isolated",
+    "properties": {
+      "IsCodeless": false
+    },
+    "bindings": [
+      {
+        "name": "req",
+        "direction": "In",
+        "type": "httpTrigger",
+        "authLevel": "Function",
+        "methods": [
+          "post"
+        ],
+        "route": "admin/embeddings/{entityId}/regenerate",
+        "properties": {}
+      },
+      {
+        "name": "$return",
+        "type": "http",
+        "direction": "Out"
+      }
+    ]
+  },
+  {
+    "name": "AdminRetryFailedEmbeddingsOptions",
+    "scriptFile": "ProfileMatching.Functions.dll",
+    "entryPoint": "ProfileMatching.Functions.AdminFunctions.AdminRetryFailedEmbeddingsOptions",
+    "language": "dotnet-isolated",
+    "properties": {
+      "IsCodeless": false
+    },
+    "bindings": [
+      {
+        "name": "req",
+        "direction": "In",
+        "type": "httpTrigger",
+        "authLevel": "Function",
+        "methods": [
+          "options"
+        ],
+        "route": "admin/embeddings/retry-failed",
+        "properties": {}
+      },
+      {
+        "name": "$return",
+        "type": "http",
+        "direction": "Out"
+      }
+    ]
+  },
+  {
+    "name": "AdminRetryFailedEmbeddings",
+    "scriptFile": "ProfileMatching.Functions.dll",
+    "entryPoint": "ProfileMatching.Functions.AdminFunctions.RetryFailedEmbeddings",
+    "language": "dotnet-isolated",
+    "properties": {
+      "IsCodeless": false
+    },
+    "bindings": [
+      {
+        "name": "req",
+        "direction": "In",
+        "type": "httpTrigger",
+        "authLevel": "Function",
+        "methods": [
+          "post"
+        ],
+        "route": "admin/embeddings/retry-failed",
+        "properties": {}
+      },
+      {
+        "name": "$return",
+        "type": "http",
+        "direction": "Out"
+      }
+    ]
+  },
+  {
+    "name": "AdminMigratePrivacySettingsOptions",
+    "scriptFile": "ProfileMatching.Functions.dll",
+    "entryPoint": "ProfileMatching.Functions.AdminFunctions.AdminMigratePrivacySettingsOptions",
+    "language": "dotnet-isolated",
+    "properties": {
+      "IsCodeless": false
+    },
+    "bindings": [
+      {
+        "name": "req",
+        "direction": "In",
+        "type": "httpTrigger",
+        "authLevel": "Function",
+        "methods": [
+          "options"
+        ],
+        "route": "admin/migrate/privacy-settings",
+        "properties": {}
+      },
+      {
+        "name": "$return",
+        "type": "http",
+        "direction": "Out"
+      }
+    ]
+  },
+  {
+    "name": "AdminMigratePrivacySettings",
+    "scriptFile": "ProfileMatching.Functions.dll",
+    "entryPoint": "ProfileMatching.Functions.AdminFunctions.MigratePrivacySettings",
+    "language": "dotnet-isolated",
+    "properties": {
+      "IsCodeless": false
+    },
+    "bindings": [
+      {
+        "name": "req",
+        "direction": "In",
+        "type": "httpTrigger",
+        "authLevel": "Function",
+        "methods": [
+          "post"
+        ],
+        "route": "admin/migrate/privacy-settings",
+        "properties": {}
+      },
+      {
+        "name": "$return",
+        "type": "http",
+        "direction": "Out"
+      }
+    ]
+  },
+  {
+    "name": "AdminGenerateSummariesOptions",
+    "scriptFile": "ProfileMatching.Functions.dll",
+    "entryPoint": "ProfileMatching.Functions.AdminFunctions.AdminGenerateSummariesOptions",
+    "language": "dotnet-isolated",
+    "properties": {
+      "IsCodeless": false
+    },
+    "bindings": [
+      {
+        "name": "req",
+        "direction": "In",
+        "type": "httpTrigger",
+        "authLevel": "Function",
+        "methods": [
+          "options"
+        ],
+        "route": "admin/summaries/generate",
+        "properties": {}
+      },
+      {
+        "name": "$return",
+        "type": "http",
+        "direction": "Out"
+      }
+    ]
+  },
+  {
+    "name": "AdminGenerateSummaries",
+    "scriptFile": "ProfileMatching.Functions.dll",
+    "entryPoint": "ProfileMatching.Functions.AdminFunctions.GenerateSummaries",
+    "language": "dotnet-isolated",
+    "properties": {
+      "IsCodeless": false
+    },
+    "bindings": [
+      {
+        "name": "req",
+        "direction": "In",
+        "type": "httpTrigger",
+        "authLevel": "Function",
+        "methods": [
+          "post"
+        ],
+        "route": "admin/summaries/generate",
+        "properties": {}
+      },
+      {
+        "name": "$return",
+        "type": "http",
+        "direction": "Out"
+      }
+    ]
+  },
+  {
+    "name": "SendConversationMessageOptions",
+    "scriptFile": "ProfileMatching.Functions.dll",
+    "entryPoint": "ProfileMatching.Functions.ConversationFunctions.SendConversationMessageOptions",
+    "language": "dotnet-isolated",
+    "properties": {
+      "IsCodeless": false
+    },
+    "bindings": [
+      {
+        "name": "req",
+        "direction": "In",
+        "type": "httpTrigger",
+        "authLevel": "Function",
+        "methods": [
+          "options"
+        ],
+        "route": "v1/entities/{entityId}/conversation",
+        "properties": {}
+      },
+      {
+        "name": "$return",
+        "type": "http",
+        "direction": "Out"
+      }
+    ]
+  },
+  {
+    "name": "SendConversationMessage",
+    "scriptFile": "ProfileMatching.Functions.dll",
+    "entryPoint": "ProfileMatching.Functions.ConversationFunctions.SendConversationMessage",
+    "language": "dotnet-isolated",
+    "properties": {
+      "IsCodeless": false
+    },
+    "bindings": [
+      {
+        "name": "req",
+        "direction": "In",
+        "type": "httpTrigger",
+        "authLevel": "Function",
+        "methods": [
+          "post"
+        ],
+        "route": "v1/entities/{entityId}/conversation",
+        "properties": {}
+      },
+      {
+        "name": "$return",
+        "type": "http",
+        "direction": "Out"
+      }
+    ]
+  },
+  {
+    "name": "GetConversationHistoryOptions",
+    "scriptFile": "ProfileMatching.Functions.dll",
+    "entryPoint": "ProfileMatching.Functions.ConversationFunctions.GetConversationHistoryOptions",
+    "language": "dotnet-isolated",
+    "properties": {
+      "IsCodeless": false
+    },
+    "bindings": [
+      {
+        "name": "req",
+        "direction": "In",
+        "type": "httpTrigger",
+        "authLevel": "Function",
+        "methods": [
+          "options"
+        ],
+        "route": "v1/entities/{entityId}/conversation",
+        "properties": {}
+      },
+      {
+        "name": "$return",
+        "type": "http",
+        "direction": "Out"
+      }
+    ]
+  },
+  {
+    "name": "GetConversationHistory",
+    "scriptFile": "ProfileMatching.Functions.dll",
+    "entryPoint": "ProfileMatching.Functions.ConversationFunctions.GetConversationHistory",
+    "language": "dotnet-isolated",
+    "properties": {
+      "IsCodeless": false
+    },
+    "bindings": [
+      {
+        "name": "req",
+        "direction": "In",
+        "type": "httpTrigger",
+        "authLevel": "Function",
+        "methods": [
+          "get"
+        ],
+        "route": "v1/entities/{entityId}/conversation",
+        "properties": {}
+      },
+      {
+        "name": "$return",
+        "type": "http",
+        "direction": "Out"
+      }
+    ]
+  },
+  {
+    "name": "DeleteConversationOptions",
+    "scriptFile": "ProfileMatching.Functions.dll",
+    "entryPoint": "ProfileMatching.Functions.ConversationFunctions.DeleteConversationOptions",
+    "language": "dotnet-isolated",
+    "properties": {
+      "IsCodeless": false
+    },
+    "bindings": [
+      {
+        "name": "req",
+        "direction": "In",
+        "type": "httpTrigger",
+        "authLevel": "Function",
+        "methods": [
+          "options"
+        ],
+        "route": "v1/entities/{entityId}/conversation",
+        "properties": {}
+      },
+      {
+        "name": "$return",
+        "type": "http",
+        "direction": "Out"
+      }
+    ]
+  },
+  {
+    "name": "DeleteConversation",
+    "scriptFile": "ProfileMatching.Functions.dll",
+    "entryPoint": "ProfileMatching.Functions.ConversationFunctions.DeleteConversation",
+    "language": "dotnet-isolated",
+    "properties": {
+      "IsCodeless": false
+    },
+    "bindings": [
+      {
+        "name": "req",
+        "direction": "In",
+        "type": "httpTrigger",
+        "authLevel": "Function",
+        "methods": [
+          "delete"
+        ],
+        "route": "v1/entities/{entityId}/conversation",
+        "properties": {}
+      },
+      {
+        "name": "$return",
+        "type": "http",
+        "direction": "Out"
+      }
+    ]
+  },
+  {
+    "name": "UploadEmbeddingOptions",
+    "scriptFile": "ProfileMatching.Functions.dll",
+    "entryPoint": "ProfileMatching.Functions.EmbeddingUploadFunctions.UploadEmbeddingOptions",
+    "language": "dotnet-isolated",
+    "properties": {
+      "IsCodeless": false
+    },
+    "bindings": [
+      {
+        "name": "req",
+        "direction": "In",
+        "type": "httpTrigger",
+        "authLevel": "Function",
+        "methods": [
+          "options"
+        ],
+        "route": "v1/entities/{entityId}/embeddings/upload",
+        "properties": {}
+      },
+      {
+        "name": "$return",
+        "type": "http",
+        "direction": "Out"
+      }
+    ]
+  },
+  {
+    "name": "UploadEmbedding",
+    "scriptFile": "ProfileMatching.Functions.dll",
+    "entryPoint": "ProfileMatching.Functions.EmbeddingUploadFunctions.UploadEmbedding",
+    "language": "dotnet-isolated",
+    "properties": {
+      "IsCodeless": false
+    },
+    "bindings": [
+      {
+        "name": "req",
+        "direction": "In",
+        "type": "httpTrigger",
+        "authLevel": "Function",
+        "methods": [
+          "post"
+        ],
+        "route": "v1/entities/{entityId}/embeddings/upload",
+        "properties": {}
+      },
+      {
+        "name": "$return",
+        "type": "http",
+        "direction": "Out"
+      }
+    ]
+  },
+  {
+    "name": "GetEntitiesOptions",
+    "scriptFile": "ProfileMatching.Functions.dll",
+    "entryPoint": "ProfileMatching.Functions.EntityFunctions.GetEntitiesOptions",
+    "language": "dotnet-isolated",
+    "properties": {
+      "IsCodeless": false
+    },
+    "bindings": [
+      {
+        "name": "req",
+        "direction": "In",
+        "type": "httpTrigger",
+        "authLevel": "Function",
+        "methods": [
+          "options"
+        ],
+        "route": "v1/entities",
+        "properties": {}
+      },
+      {
+        "name": "$return",
+        "type": "http",
+        "direction": "Out"
+      }
+    ]
+  },
+  {
+    "name": "GetEntities",
+    "scriptFile": "ProfileMatching.Functions.dll",
+    "entryPoint": "ProfileMatching.Functions.EntityFunctions.GetEntities",
+    "language": "dotnet-isolated",
+    "properties": {
+      "IsCodeless": false
+    },
+    "bindings": [
+      {
+        "name": "req",
+        "direction": "In",
+        "type": "httpTrigger",
+        "authLevel": "Function",
+        "methods": [
+          "get"
+        ],
+        "route": "v1/entities",
+        "properties": {}
+      },
+      {
+        "name": "$return",
+        "type": "http",
+        "direction": "Out"
+      }
+    ]
+  },
+  {
+    "name": "GetEntityByIdOptions",
+    "scriptFile": "ProfileMatching.Functions.dll",
+    "entryPoint": "ProfileMatching.Functions.EntityFunctions.GetEntityByIdOptions",
+    "language": "dotnet-isolated",
+    "properties": {
+      "IsCodeless": false
+    },
+    "bindings": [
+      {
+        "name": "req",
+        "direction": "In",
+        "type": "httpTrigger",
+        "authLevel": "Function",
+        "methods": [
+          "options"
+        ],
+        "route": "v1/entities/{id}",
+        "properties": {}
+      },
+      {
+        "name": "$return",
+        "type": "http",
+        "direction": "Out"
+      }
+    ]
+  },
+  {
+    "name": "GetEntityById",
+    "scriptFile": "ProfileMatching.Functions.dll",
+    "entryPoint": "ProfileMatching.Functions.EntityFunctions.GetEntityById",
+    "language": "dotnet-isolated",
+    "properties": {
+      "IsCodeless": false
+    },
+    "bindings": [
+      {
+        "name": "req",
+        "direction": "In",
+        "type": "httpTrigger",
+        "authLevel": "Function",
+        "methods": [
+          "get"
+        ],
+        "route": "v1/entities/{id}",
+        "properties": {}
+      },
+      {
+        "name": "$return",
+        "type": "http",
+        "direction": "Out"
+      }
+    ]
+  },
+  {
+    "name": "CreateEntityOptions",
+    "scriptFile": "ProfileMatching.Functions.dll",
+    "entryPoint": "ProfileMatching.Functions.EntityFunctions.CreateEntityOptions",
+    "language": "dotnet-isolated",
+    "properties": {
+      "IsCodeless": false
+    },
+    "bindings": [
+      {
+        "name": "req",
+        "direction": "In",
+        "type": "httpTrigger",
+        "authLevel": "Function",
+        "methods": [
+          "options"
+        ],
+        "route": "v1/entities",
+        "properties": {}
+      },
+      {
+        "name": "$return",
+        "type": "http",
+        "direction": "Out"
+      }
+    ]
+  },
+  {
+    "name": "CreateEntity",
+    "scriptFile": "ProfileMatching.Functions.dll",
+    "entryPoint": "ProfileMatching.Functions.EntityFunctions.CreateEntity",
+    "language": "dotnet-isolated",
+    "properties": {
+      "IsCodeless": false
+    },
+    "bindings": [
+      {
+        "name": "req",
+        "direction": "In",
+        "type": "httpTrigger",
+        "authLevel": "Function",
+        "methods": [
+          "post"
+        ],
+        "route": "v1/entities",
+        "properties": {}
+      },
+      {
+        "name": "$return",
+        "type": "http",
+        "direction": "Out"
+      }
+    ]
+  },
+  {
+    "name": "UpdateEntityOptions",
+    "scriptFile": "ProfileMatching.Functions.dll",
+    "entryPoint": "ProfileMatching.Functions.EntityFunctions.UpdateEntityOptions",
+    "language": "dotnet-isolated",
+    "properties": {
+      "IsCodeless": false
+    },
+    "bindings": [
+      {
+        "name": "req",
+        "direction": "In",
+        "type": "httpTrigger",
+        "authLevel": "Function",
+        "methods": [
+          "options"
+        ],
+        "route": "v1/entities/{id}",
+        "properties": {}
+      },
+      {
+        "name": "$return",
+        "type": "http",
+        "direction": "Out"
+      }
+    ]
+  },
+  {
+    "name": "UpdateEntity",
+    "scriptFile": "ProfileMatching.Functions.dll",
+    "entryPoint": "ProfileMatching.Functions.EntityFunctions.UpdateEntity",
+    "language": "dotnet-isolated",
+    "properties": {
+      "IsCodeless": false
+    },
+    "bindings": [
+      {
+        "name": "req",
+        "direction": "In",
+        "type": "httpTrigger",
+        "authLevel": "Function",
+        "methods": [
+          "put"
+        ],
+        "route": "v1/entities/{id}",
+        "properties": {}
+      },
+      {
+        "name": "$return",
+        "type": "http",
+        "direction": "Out"
+      }
+    ]
+  },
+  {
+    "name": "DeleteEntityOptions",
+    "scriptFile": "ProfileMatching.Functions.dll",
+    "entryPoint": "ProfileMatching.Functions.EntityFunctions.DeleteEntityOptions",
+    "language": "dotnet-isolated",
+    "properties": {
+      "IsCodeless": false
+    },
+    "bindings": [
+      {
+        "name": "req",
+        "direction": "In",
+        "type": "httpTrigger",
+        "authLevel": "Function",
+        "methods": [
+          "options"
+        ],
+        "route": "v1/entities/{id}",
+        "properties": {}
+      },
+      {
+        "name": "$return",
+        "type": "http",
+        "direction": "Out"
+      }
+    ]
+  },
+  {
+    "name": "DeleteEntity",
+    "scriptFile": "ProfileMatching.Functions.dll",
+    "entryPoint": "ProfileMatching.Functions.EntityFunctions.DeleteEntity",
+    "language": "dotnet-isolated",
+    "properties": {
+      "IsCodeless": false
+    },
+    "bindings": [
+      {
+        "name": "req",
+        "direction": "In",
+        "type": "httpTrigger",
+        "authLevel": "Function",
+        "methods": [
+          "delete"
+        ],
+        "route": "v1/entities/{id}",
+        "properties": {}
+      },
+      {
+        "name": "$return",
+        "type": "http",
+        "direction": "Out"
+      }
+    ]
+  },
+  {
+    "name": "EntityMetadataOptions",
+    "scriptFile": "ProfileMatching.Functions.dll",
+    "entryPoint": "ProfileMatching.Functions.EntityFunctions.EntityMetadataOptions",
+    "language": "dotnet-isolated",
+    "properties": {
+      "IsCodeless": false
+    },
+    "bindings": [
+      {
+        "name": "req",
+        "direction": "In",
+        "type": "httpTrigger",
+        "authLevel": "Function",
+        "methods": [
+          "options"
+        ],
+        "route": "v1/entities/{id}/metadata",
+        "properties": {}
+      },
+      {
+        "name": "$return",
+        "type": "http",
+        "direction": "Out"
+      }
+    ]
+  },
+  {
+    "name": "GetEntityMetadata",
+    "scriptFile": "ProfileMatching.Functions.dll",
+    "entryPoint": "ProfileMatching.Functions.EntityFunctions.GetEntityMetadata",
+    "language": "dotnet-isolated",
+    "properties": {
+      "IsCodeless": false
+    },
+    "bindings": [
+      {
+        "name": "req",
+        "direction": "In",
+        "type": "httpTrigger",
+        "authLevel": "Function",
+        "methods": [
+          "get"
+        ],
+        "route": "v1/entities/{id}/metadata",
+        "properties": {}
+      },
+      {
+        "name": "$return",
+        "type": "http",
+        "direction": "Out"
+      }
+    ]
+  },
+  {
+    "name": "UpdateEntityMetadata",
+    "scriptFile": "ProfileMatching.Functions.dll",
+    "entryPoint": "ProfileMatching.Functions.EntityFunctions.UpdateEntityMetadata",
+    "language": "dotnet-isolated",
+    "properties": {
+      "IsCodeless": false
+    },
+    "bindings": [
+      {
+        "name": "req",
+        "direction": "In",
+        "type": "httpTrigger",
+        "authLevel": "Function",
+        "methods": [
+          "patch"
+        ],
+        "route": "v1/entities/{id}/metadata",
+        "properties": {}
+      },
+      {
+        "name": "$return",
+        "type": "http",
+        "direction": "Out"
+      }
+    ]
+  },
+  {
+    "name": "ExpireOldMatches",
+    "scriptFile": "ProfileMatching.Functions.dll",
+    "entryPoint": "ProfileMatching.Functions.ExpireOldMatchesFunction.Run",
+    "language": "dotnet-isolated",
+    "properties": {
+      "IsCodeless": false
+    },
+    "bindings": [
+      {
+        "name": "timerInfo",
+        "direction": "In",
+        "type": "timerTrigger",
+        "schedule": "0 0 * * * *",
+        "properties": {}
+      }
+    ]
+  },
+  {
+    "name": "GenerateEntitySummaries",
+    "scriptFile": "ProfileMatching.Functions.dll",
+    "entryPoint": "ProfileMatching.Functions.GenerateEntitySummariesFunction.Run",
+    "language": "dotnet-isolated",
+    "properties": {
+      "IsCodeless": false
+    },
+    "bindings": [
+      {
+        "name": "timerInfo",
+        "direction": "In",
+        "type": "timerTrigger",
+        "schedule": "0 0 2 * * *",
+        "properties": {}
+      }
+    ]
+  },
+  {
+    "name": "CreateMatchRequest",
+    "scriptFile": "ProfileMatching.Functions.dll",
+    "entryPoint": "ProfileMatching.Functions.MatchFunctions.CreateMatchRequest",
+    "language": "dotnet-isolated",
+    "properties": {
+      "IsCodeless": false
+    },
+    "bindings": [
+      {
+        "name": "req",
+        "direction": "In",
+        "type": "httpTrigger",
+        "authLevel": "Function",
+        "methods": [
+          "post",
+          "options"
+        ],
+        "route": "v1/matches",
+        "properties": {}
+      },
+      {
+        "name": "$return",
+        "type": "http",
+        "direction": "Out"
+      }
+    ]
+  },
+  {
+    "name": "GetMatchRequest",
+    "scriptFile": "ProfileMatching.Functions.dll",
+    "entryPoint": "ProfileMatching.Functions.MatchFunctions.GetMatchRequest",
+    "language": "dotnet-isolated",
+    "properties": {
+      "IsCodeless": false
+    },
+    "bindings": [
+      {
+        "name": "req",
+        "direction": "In",
+        "type": "httpTrigger",
+        "authLevel": "Function",
+        "methods": [
+          "get",
+          "options"
+        ],
+        "route": "v1/matches/{id}",
+        "properties": {}
+      },
+      {
+        "name": "$return",
+        "type": "http",
+        "direction": "Out"
+      }
+    ]
+  },
+  {
+    "name": "UpdateMatchStatus",
+    "scriptFile": "ProfileMatching.Functions.dll",
+    "entryPoint": "ProfileMatching.Functions.MatchFunctions.UpdateMatchStatus",
+    "language": "dotnet-isolated",
+    "properties": {
+      "IsCodeless": false
+    },
+    "bindings": [
+      {
+        "name": "req",
+        "direction": "In",
+        "type": "httpTrigger",
+        "authLevel": "Function",
+        "methods": [
+          "patch",
+          "options"
+        ],
+        "route": "v1/matches/{id}/status",
+        "properties": {}
+      },
+      {
+        "name": "$return",
+        "type": "http",
+        "direction": "Out"
+      }
+    ]
+  },
+  {
+    "name": "GetIncomingMatches",
+    "scriptFile": "ProfileMatching.Functions.dll",
+    "entryPoint": "ProfileMatching.Functions.MatchFunctions.GetIncomingMatches",
+    "language": "dotnet-isolated",
+    "properties": {
+      "IsCodeless": false
+    },
+    "bindings": [
+      {
+        "name": "req",
+        "direction": "In",
+        "type": "httpTrigger",
+        "authLevel": "Function",
+        "methods": [
+          "get",
+          "options"
+        ],
+        "route": "v1/entities/{entityId}/matches/incoming",
+        "properties": {}
+      },
+      {
+        "name": "$return",
+        "type": "http",
+        "direction": "Out"
+      }
+    ]
+  },
+  {
+    "name": "GetOutgoingMatches",
+    "scriptFile": "ProfileMatching.Functions.dll",
+    "entryPoint": "ProfileMatching.Functions.MatchFunctions.GetOutgoingMatches",
+    "language": "dotnet-isolated",
+    "properties": {
+      "IsCodeless": false
+    },
+    "bindings": [
+      {
+        "name": "req",
+        "direction": "In",
+        "type": "httpTrigger",
+        "authLevel": "Function",
+        "methods": [
+          "get",
+          "options"
+        ],
+        "route": "v1/entities/{entityId}/matches/outgoing",
+        "properties": {}
+      },
+      {
+        "name": "$return",
+        "type": "http",
+        "direction": "Out"
+      }
+    ]
+  },
+  {
+    "name": "FindMutualMatchesOptions",
+    "scriptFile": "ProfileMatching.Functions.dll",
+    "entryPoint": "ProfileMatching.Functions.MutualMatchFunctions.FindMutualMatchesOptions",
+    "language": "dotnet-isolated",
+    "properties": {
+      "IsCodeless": false
+    },
+    "bindings": [
+      {
+        "name": "req",
+        "direction": "In",
+        "type": "httpTrigger",
+        "authLevel": "Function",
+        "methods": [
+          "options"
+        ],
+        "route": "v1/entities/{id}/mutual-matches",
+        "properties": {}
+      },
+      {
+        "name": "$return",
+        "type": "http",
+        "direction": "Out"
+      }
+    ]
+  },
+  {
+    "name": "FindMutualMatches",
+    "scriptFile": "ProfileMatching.Functions.dll",
+    "entryPoint": "ProfileMatching.Functions.MutualMatchFunctions.FindMutualMatches",
+    "language": "dotnet-isolated",
+    "properties": {
+      "IsCodeless": false
+    },
+    "bindings": [
+      {
+        "name": "req",
+        "direction": "In",
+        "type": "httpTrigger",
+        "authLevel": "Function",
+        "methods": [
+          "post"
+        ],
+        "route": "v1/entities/{id}/mutual-matches",
+        "properties": {}
+      },
+      {
+        "name": "$return",
+        "type": "http",
+        "direction": "Out"
+      }
+    ]
+  },
+  {
+    "name": "ProcessPendingEmbeddings",
+    "scriptFile": "ProfileMatching.Functions.dll",
+    "entryPoint": "ProfileMatching.Functions.ProcessPendingEmbeddingsFunction.Run",
+    "language": "dotnet-isolated",
+    "properties": {
+      "IsCodeless": false
+    },
+    "bindings": [
+      {
+        "name": "timerInfo",
+        "direction": "In",
+        "type": "timerTrigger",
+        "schedule": "0 */30 * * * *",
+        "properties": {}
+      }
+    ]
+  },
+  {
+    "name": "SearchEventsForEntity",
+    "scriptFile": "ProfileMatching.Functions.dll",
+    "entryPoint": "ProfileMatching.Functions.ProfileSearchFunctions.SearchEvents",
+    "language": "dotnet-isolated",
+    "properties": {
+      "IsCodeless": false
+    },
+    "bindings": [
+      {
+        "name": "req",
+        "direction": "In",
+        "type": "httpTrigger",
+        "authLevel": "Function",
+        "methods": [
+          "post"
+        ],
+        "route": "v1/profile-search/events",
+        "properties": {}
+      },
+      {
+        "name": "$return",
+        "type": "http",
+        "direction": "Out"
+      }
+    ]
+  },
+  {
+    "name": "CreateRatingOptions",
+    "scriptFile": "ProfileMatching.Functions.dll",
+    "entryPoint": "ProfileMatching.Functions.ReputationFunctions.CreateRatingOptions",
+    "language": "dotnet-isolated",
+    "properties": {
+      "IsCodeless": false
+    },
+    "bindings": [
+      {
+        "name": "req",
+        "direction": "In",
+        "type": "httpTrigger",
+        "authLevel": "Function",
+        "methods": [
+          "options"
+        ],
+        "route": "v1/ratings",
+        "properties": {}
+      },
+      {
+        "name": "$return",
+        "type": "http",
+        "direction": "Out"
+      }
+    ]
+  },
+  {
+    "name": "CreateRating",
+    "scriptFile": "ProfileMatching.Functions.dll",
+    "entryPoint": "ProfileMatching.Functions.ReputationFunctions.CreateRating",
+    "language": "dotnet-isolated",
+    "properties": {
+      "IsCodeless": false
+    },
+    "bindings": [
+      {
+        "name": "req",
+        "direction": "In",
+        "type": "httpTrigger",
+        "authLevel": "Function",
+        "methods": [
+          "post"
+        ],
+        "route": "v1/ratings",
+        "properties": {}
+      },
+      {
+        "name": "$return",
+        "type": "http",
+        "direction": "Out"
+      }
+    ]
+  },
+  {
+    "name": "GetRatingOptions",
+    "scriptFile": "ProfileMatching.Functions.dll",
+    "entryPoint": "ProfileMatching.Functions.ReputationFunctions.GetRatingOptions",
+    "language": "dotnet-isolated",
+    "properties": {
+      "IsCodeless": false
+    },
+    "bindings": [
+      {
+        "name": "req",
+        "direction": "In",
+        "type": "httpTrigger",
+        "authLevel": "Function",
+        "methods": [
+          "options"
+        ],
+        "route": "v1/ratings/{id}",
+        "properties": {}
+      },
+      {
+        "name": "$return",
+        "type": "http",
+        "direction": "Out"
+      }
+    ]
+  },
+  {
+    "name": "GetRating",
+    "scriptFile": "ProfileMatching.Functions.dll",
+    "entryPoint": "ProfileMatching.Functions.ReputationFunctions.GetRating",
+    "language": "dotnet-isolated",
+    "properties": {
+      "IsCodeless": false
+    },
+    "bindings": [
+      {
+        "name": "req",
+        "direction": "In",
+        "type": "httpTrigger",
+        "authLevel": "Function",
+        "methods": [
+          "get"
+        ],
+        "route": "v1/ratings/{id}",
+        "properties": {}
+      },
+      {
+        "name": "$return",
+        "type": "http",
+        "direction": "Out"
+      }
+    ]
+  },
+  {
+    "name": "DeleteRating",
+    "scriptFile": "ProfileMatching.Functions.dll",
+    "entryPoint": "ProfileMatching.Functions.ReputationFunctions.DeleteRating",
+    "language": "dotnet-isolated",
+    "properties": {
+      "IsCodeless": false
+    },
+    "bindings": [
+      {
+        "name": "req",
+        "direction": "In",
+        "type": "httpTrigger",
+        "authLevel": "Function",
+        "methods": [
+          "delete"
+        ],
+        "route": "v1/ratings/{id}",
+        "properties": {}
+      },
+      {
+        "name": "$return",
+        "type": "http",
+        "direction": "Out"
+      }
+    ]
+  },
+  {
+    "name": "GetEntityRatingsOptions",
+    "scriptFile": "ProfileMatching.Functions.dll",
+    "entryPoint": "ProfileMatching.Functions.ReputationFunctions.GetEntityRatingsOptions",
+    "language": "dotnet-isolated",
+    "properties": {
+      "IsCodeless": false
+    },
+    "bindings": [
+      {
+        "name": "req",
+        "direction": "In",
+        "type": "httpTrigger",
+        "authLevel": "Function",
+        "methods": [
+          "options"
+        ],
+        "route": "v1/entities/{entityId}/ratings",
+        "properties": {}
+      },
+      {
+        "name": "$return",
+        "type": "http",
+        "direction": "Out"
+      }
+    ]
+  },
+  {
+    "name": "GetEntityRatings",
+    "scriptFile": "ProfileMatching.Functions.dll",
+    "entryPoint": "ProfileMatching.Functions.ReputationFunctions.GetEntityRatings",
+    "language": "dotnet-isolated",
+    "properties": {
+      "IsCodeless": false
+    },
+    "bindings": [
+      {
+        "name": "req",
+        "direction": "In",
+        "type": "httpTrigger",
+        "authLevel": "Function",
+        "methods": [
+          "get"
+        ],
+        "route": "v1/entities/{entityId}/ratings",
+        "properties": {}
+      },
+      {
+        "name": "$return",
+        "type": "http",
+        "direction": "Out"
+      }
+    ]
+  },
+  {
+    "name": "GetEntityReputationOptions",
+    "scriptFile": "ProfileMatching.Functions.dll",
+    "entryPoint": "ProfileMatching.Functions.ReputationFunctions.GetEntityReputationOptions",
+    "language": "dotnet-isolated",
+    "properties": {
+      "IsCodeless": false
+    },
+    "bindings": [
+      {
+        "name": "req",
+        "direction": "In",
+        "type": "httpTrigger",
+        "authLevel": "Function",
+        "methods": [
+          "options"
+        ],
+        "route": "v1/entities/{entityId}/reputation",
+        "properties": {}
+      },
+      {
+        "name": "$return",
+        "type": "http",
+        "direction": "Out"
+      }
+    ]
+  },
+  {
+    "name": "GetEntityReputation",
+    "scriptFile": "ProfileMatching.Functions.dll",
+    "entryPoint": "ProfileMatching.Functions.ReputationFunctions.GetEntityReputation",
+    "language": "dotnet-isolated",
+    "properties": {
+      "IsCodeless": false
+    },
+    "bindings": [
+      {
+        "name": "req",
+        "direction": "In",
+        "type": "httpTrigger",
+        "authLevel": "Function",
+        "methods": [
+          "get"
+        ],
+        "route": "v1/entities/{entityId}/reputation",
+        "properties": {}
+      },
+      {
+        "name": "$return",
+        "type": "http",
+        "direction": "Out"
+      }
+    ]
+  },
+  {
+    "name": "RecalculateReputation",
+    "scriptFile": "ProfileMatching.Functions.dll",
+    "entryPoint": "ProfileMatching.Functions.ReputationFunctions.RecalculateReputation",
+    "language": "dotnet-isolated",
+    "properties": {
+      "IsCodeless": false
+    },
+    "bindings": [
+      {
+        "name": "req",
+        "direction": "In",
+        "type": "httpTrigger",
+        "authLevel": "Function",
+        "methods": [
+          "post"
+        ],
+        "route": "v1/entities/{entityId}/reputation/recalculate",
+        "properties": {}
+      },
+      {
+        "name": "$return",
+        "type": "http",
+        "direction": "Out"
+      }
+    ]
+  },
+  {
+    "name": "SearchEntitiesOptions",
+    "scriptFile": "ProfileMatching.Functions.dll",
+    "entryPoint": "ProfileMatching.Functions.SearchFunctions.SearchEntitiesOptions",
+    "language": "dotnet-isolated",
+    "properties": {
+      "IsCodeless": false
+    },
+    "bindings": [
+      {
+        "name": "req",
+        "direction": "In",
+        "type": "httpTrigger",
+        "authLevel": "Function",
+        "methods": [
+          "options"
+        ],
+        "route": "v1/entities/search",
+        "properties": {}
+      },
+      {
+        "name": "$return",
+        "type": "http",
+        "direction": "Out"
+      }
+    ]
+  },
+  {
+    "name": "SearchEntities",
+    "scriptFile": "ProfileMatching.Functions.dll",
+    "entryPoint": "ProfileMatching.Functions.SearchFunctions.SearchEntities",
+    "language": "dotnet-isolated",
+    "properties": {
+      "IsCodeless": false
+    },
+    "bindings": [
+      {
+        "name": "req",
+        "direction": "In",
+        "type": "httpTrigger",
+        "authLevel": "Function",
+        "methods": [
+          "post"
+        ],
+        "route": "v1/entities/search",
+        "properties": {}
+      },
+      {
+        "name": "$return",
+        "type": "http",
+        "direction": "Out"
+      }
+    ]
+  },
+  {
+    "name": "GetSimilarEntitiesOptions",
+    "scriptFile": "ProfileMatching.Functions.dll",
+    "entryPoint": "ProfileMatching.Functions.SearchFunctions.GetSimilarEntitiesOptions",
+    "language": "dotnet-isolated",
+    "properties": {
+      "IsCodeless": false
+    },
+    "bindings": [
+      {
+        "name": "req",
+        "direction": "In",
+        "type": "httpTrigger",
+        "authLevel": "Function",
+        "methods": [
+          "options"
+        ],
+        "route": "v1/entities/{entityId}/similar",
+        "properties": {}
+      },
+      {
+        "name": "$return",
+        "type": "http",
+        "direction": "Out"
+      }
+    ]
+  },
+  {
+    "name": "GetSimilarEntities",
+    "scriptFile": "ProfileMatching.Functions.dll",
+    "entryPoint": "ProfileMatching.Functions.SearchFunctions.GetSimilarEntities",
+    "language": "dotnet-isolated",
+    "properties": {
+      "IsCodeless": false
+    },
+    "bindings": [
+      {
+        "name": "req",
+        "direction": "In",
+        "type": "httpTrigger",
+        "authLevel": "Function",
+        "methods": [
+          "get"
+        ],
+        "route": "v1/entities/{entityId}/similar",
+        "properties": {}
+      },
+      {
+        "name": "$return",
+        "type": "http",
+        "direction": "Out"
+      }
+    ]
+  },
+  {
+    "name": "GetVersion",
+    "scriptFile": "ProfileMatching.Functions.dll",
+    "entryPoint": "ProfileMatching.Functions.VersionFunctions.GetVersion",
+    "language": "dotnet-isolated",
+    "properties": {
+      "IsCodeless": false
+    },
+    "bindings": [
+      {
+        "name": "req",
+        "direction": "In",
+        "type": "httpTrigger",
+        "authLevel": "Anonymous",
+        "methods": [
+          "get"
+        ],
+        "route": "version",
+        "properties": {}
+      },
+      {
+        "name": "$return",
+        "type": "http",
+        "direction": "Out"
+      }
+    ]
+  },
+  {
+    "name": "GetVersionOptions",
+    "scriptFile": "ProfileMatching.Functions.dll",
+    "entryPoint": "ProfileMatching.Functions.VersionFunctions.GetVersionOptions",
+    "language": "dotnet-isolated",
+    "properties": {
+      "IsCodeless": false
+    },
+    "bindings": [
+      {
+        "name": "req",
+        "direction": "In",
+        "type": "httpTrigger",
+        "authLevel": "Anonymous",
+        "methods": [
+          "options"
+        ],
+        "route": "version",
+        "properties": {}
+      },
+      {
+        "name": "$return",
+        "type": "http",
+        "direction": "Out"
+      }
+    ]
+  }
+]

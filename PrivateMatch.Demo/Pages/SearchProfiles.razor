@@ -1,0 +1,195 @@
+@page "/search"
+@using ProfileMatching.SDK
+@using ProfileMatching.Core.Models.Search
+@inject ProfileMatchingClient Client
+
+<PageTitle>Privacy-Protected Search - PrivateMatch</PageTitle>
+
+<div class="container">
+    <h1 class="title">🔍 Company Search (Privacy-Protected)</h1>
+    <p class="subtitle">Search for candidates without seeing their personal information</p>
+
+    <div class="search-section">
+        <h2>Search for Candidates</h2>
+        <p class="info-text">
+            Enter a natural language query describing the candidate you're looking for.
+        </p>
+
+        <div class="search-input-group">
+            <input
+                type="text"
+                class="search-input"
+                @bind="searchQuery"
+                @bind:event="oninput"
+                placeholder="e.g., Senior Python engineer with AWS experience and ML background"
+            />
+
+            <button class="btn btn-primary" @onclick="PerformSearch" disabled="@(string.IsNullOrWhiteSpace(searchQuery) || isSearching)">
+                @(isSearching ? "Searching..." : "Search")
+            </button>
+        </div>
+
+        <div class="search-options">
+            <label>
+                <input type="checkbox" @bind="enforcePrivacy" />
+                Enforce Privacy (recommended)
+            </label>
+            <label>
+                Minimum Similarity:
+                <input type="range" min="0" max="100" @bind="minSimilarityPercent" @bind:event="oninput" />
+                <span>@minSimilarityPercent%</span>
+            </label>
+        </div>
+    </div>
+
+    @if (searchResults != null)
+    {
+        <div class="results-section">
+            <h2>Search Results</h2>
+            <div class="results-metadata">
+                <p>
+                    Found <strong>@searchResults.TotalMatches</strong> matches in <strong>@searchResults.Metadata.SearchDurationMs ms</strong>
+                </p>
+                <p class="privacy-note">
+                    🔒 Privacy Mode Active: Only profile IDs shown. Names and contact info remain hidden.
+                </p>
+            </div>
+
+            @if (searchResults.Matches.Count == 0)
+            {
+                <div class="no-results">
+                    <p>No matches found. Try adjusting your search query or lowering the minimum similarity.</p>
+                </div>
+            }
+            else
+            {
+                <div class="results-list">
+                    @foreach (var (match, index) in searchResults.Matches.Select((m, i) => (m, i)))
+                    {
+                        <div class="result-card">
+                            <div class="result-header">
+                                <h3>Profile #@match.ProfileId.Substring(0, 8)</h3>
+                                <div class="match-score @GetScoreClass(match.SimilarityScore)">
+                                    @((match.SimilarityScore * 100).ToString("F1"))% Match
+                                </div>
+                            </div>
+
+                            <div class="result-details">
+                                @if (match.MatchedAttributes != null && match.MatchedAttributes.Count > 0)
+                                {
+                                    <div class="matched-attributes">
+                                        <strong>Matched Attributes:</strong>
+                                        <ul>
+                                            @foreach (var attr in match.MatchedAttributes.Take(5))
+                                            {
+                                                <li><code>@attr.Key</code>: @attr.Value</li>
+                                            }
+                                        </ul>
+                                    </div>
+                                }
+
+                                <div class="privacy-mask">
+                                    <p class="muted">
+                                        👤 Name: [Hidden] <br/>
+                                        📧 Email: [Hidden] <br/>
+                                        📞 Phone: [Hidden]
+                                    </p>
+                                    <p class="privacy-info">
+                                        Contact information remains private until candidate accepts your match request.
+                                    </p>
+                                </div>
+
+                                <button class="btn btn-secondary btn-sm" @onclick="() => SendMatchRequest(match.ProfileId)">
+                                    Send Match Request
+                                </button>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    }
+
+    @if (!string.IsNullOrEmpty(statusMessage))
+    {
+        <div class="status-box">
+            @statusMessage
+        </div>
+    }
+
+    <div class="example-queries">
+        <h3>Example Queries:</h3>
+        <div class="query-buttons">
+            <button class="btn btn-outline" @onclick='() => SetQuery("Senior software engineer with Python and AWS experience")'>
+                Python + AWS Engineer
+            </button>
+            <button class="btn btn-outline" @onclick='() => SetQuery("Full-stack developer, React, Node.js, 5+ years")'>
+                Full-Stack Developer
+            </button>
+            <button class="btn btn-outline" @onclick='() => SetQuery("Machine learning engineer, TensorFlow, PyTorch, computer vision")'>
+                ML Engineer
+            </button>
+            <button class="btn btn-outline" @onclick='() => SetQuery("DevOps engineer, Kubernetes, Docker, CI/CD, cloud infrastructure")'>
+                DevOps Engineer
+            </button>
+        </div>
+    </div>
+</div>
+
+@code {
+    private string searchQuery = "";
+    private bool enforcePrivacy = true;
+    private int minSimilarityPercent = 70;
+    private bool isSearching = false;
+    private SearchResult? searchResults;
+    private string statusMessage = "";
+
+    private async Task PerformSearch()
+    {
+        try
+        {
+            isSearching = true;
+            statusMessage = "";
+            searchResults = null;
+            StateHasChanged();
+
+            var request = new SearchRequest
+            {
+                Query = searchQuery,
+                EnforcePrivacy = enforcePrivacy,
+                MinSimilarity = minSimilarityPercent / 100f,
+                Limit = 20,
+                RequestingUserId = "demo-company-recruiter"
+            };
+
+            searchResults = await Client.Search.SearchAsync(request);
+        }
+        catch (Exception ex)
+        {
+            statusMessage = $"Search failed: {ex.Message}";
+        }
+        finally
+        {
+            isSearching = false;
+            StateHasChanged();
+        }
+    }
+
+    private void SetQuery(string query)
+    {
+        searchQuery = query;
+    }
+
+    private void SendMatchRequest(string profileId)
+    {
+        statusMessage = $"Match request sent to Profile #{profileId.Substring(0, 8)}! Waiting for candidate to accept...";
+    }
+
+    private string GetScoreClass(float score)
+    {
+        if (score >= 0.9f) return "excellent";
+        if (score >= 0.8f) return "good";
+        if (score >= 0.7f) return "fair";
+        return "low";
+    }
+}
