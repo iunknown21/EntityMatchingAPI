@@ -67,3 +67,6 @@ dont check in.txt
 docs/API_KEYS_SETUP_GUIDE.md
 docs/KEYVAULT_CONFIGURATION_FIX.md
 docs/DEVELOPER_GUIDE_CICD.md
+
+# Azure resource backups
+old-resource-backup/
