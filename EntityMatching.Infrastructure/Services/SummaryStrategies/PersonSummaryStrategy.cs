@@ -149,11 +149,29 @@ namespace EntityMatching.Infrastructure.Services.SummaryStrategies
                         summary.AppendLine("Enjoys gardening");
                 }
 
+                // Gift Preferences
+                if (person.GiftPreferences != null)
+                {
+                    metadata.PreferenceCategories.Add("Gift");
+                    summary.AppendLine();
+                    summary.AppendLine("=== Gift Preferences ===");
+
+                    var gp = person.GiftPreferences;
+                    if (gp.MeaningfulGiftTypes?.Any() == true)
+                        summary.AppendLine($"Meaningful Gift Types: {string.Join(", ", gp.MeaningfulGiftTypes)}");
+                    if (!string.IsNullOrEmpty(gp.PreferredGiftStyle))
+                        summary.AppendLine($"Gift Style: {gp.PreferredGiftStyle}");
+                    if (gp.LikesSurprises)
+                        summary.AppendLine("Enjoys surprises");
+                    if (gp.CollectsOrHobbies?.Any() == true)
+                        summary.AppendLine($"Collects/Hobbies: {string.Join(", ", gp.CollectsOrHobbies)}");
+                }
+
                 // Accessibility Needs
                 if (person.AccessibilityNeeds != null)
                 {
                     var an = person.AccessibilityNeeds;
-                    if (an.RequiresWheelchairAccess || an.HasLimitedMobility || an.RequiresHearingAssistance)
+                    if (an.RequiresWheelchairAccess || an.HasLimitedMobility || an.RequiresHearingAssistance || !string.IsNullOrEmpty(an.SpecialConsiderations))
                     {
                         summary.AppendLine();
                         summary.AppendLine("=== Accessibility Needs ===");
@@ -163,6 +181,8 @@ namespace EntityMatching.Infrastructure.Services.SummaryStrategies
                             summary.AppendLine("Has limited mobility");
                         if (an.RequiresHearingAssistance)
                             summary.AppendLine("Requires hearing assistance");
+                        if (!string.IsNullOrEmpty(an.SpecialConsiderations))
+                            summary.AppendLine($"Special Considerations: {an.SpecialConsiderations}");
                     }
                 }
 
