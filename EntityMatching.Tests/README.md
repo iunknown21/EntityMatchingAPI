@@ -1,372 +1,182 @@
-# ProfileMatching.Tests
+# EntityMatching.Tests
 
-Comprehensive test suite for the ProfileMatchingAPI, ensuring quality and reliability for licensed usage.
+**Generic entity matching system tests - Entity-type agnostic**
 
-## Test Structure
+## 🎯 Purpose
+
+This test project contains **only generic entity tests** that work across all entity types (Person, Job, Property, Career, Major, etc.).
+
+**Entity-specific tests belong in their respective projects:**
+- `PersonEntity` tests → `ProfileMatchingAPI/ProfileMatching.Tests/`
+- `JobEntity` tests → `JobMatchingAPI/JobMatching.Tests/` (if exists)
+- `PropertyEntity` tests → `PropertyMatchingAPI/PropertyMatching.Tests/` (if exists)
+
+## 🏗️ Architecture Philosophy
+
+### This Project Tests:
+✅ **Generic Entity base class** - Properties and methods on `Entity`
+✅ **Universal services** - Services that work with any entity type
+✅ **Entity-agnostic algorithms** - Matching, filtering, search without entity-specific logic
+✅ **Infrastructure** - CosmosDB, caching, serialization (entity-independent)
+
+### This Project Does NOT Test:
+❌ **PersonEntity-specific logic** - Personality, preferences, love languages (see ProfileMatchingAPI)
+❌ **JobEntity-specific logic** - Skills, requirements, compensation (separate project)
+❌ **PropertyEntity-specific logic** - Location, amenities, pricing (separate project)
+❌ **Entity-specific workflows** - Person matching, job matching (domain-specific projects)
+
+## 📁 Test Structure
 
 ```
-ProfileMatching.Tests/
-├── Services/                  # Unit tests for service layer
-│   ├── ProfileServiceTests.cs
-│   ├── ProfileSummaryServiceTests.cs
-│   ├── ConversationServiceTests.cs (planned)
-│   └── EmbeddingStorageServiceTests.cs (planned)
-│
-├── Integration/               # Integration tests (2 approaches)
-│   ├── Service-Level (Direct service calls)
-│   │   ├── ProfileServiceIntegrationTests.cs
-│   │   ├── EmbeddingStorageServiceIntegrationTests.cs
-│   │   ├── ConversationServiceIntegrationTests.cs
-│   │   └── ProfileMatchingWorkflowIntegrationTests.cs
-│   │
-│   ├── API-Level (HTTP calls to Functions)
-│   │   ├── ProfileMatchingApiTests.cs
-│   │   └── ApiTestHelper.cs
-│   │
-│   └── ProfileFunctionsTests.cs (legacy)
-│
-└── Helpers/                   # Test utilities and data factories
-    └── TestDataFactory.cs
+EntityMatching.Tests/
+├── Unit/
+│   └── GenericEntityTests.cs          # Base Entity class tests
+├── Integration/                        # Reserved for future generic integration tests
+├── EntityMatching.Tests.csproj
+├── testsettings.json                   # Azure configuration
+├── API_TESTING_GUIDE.md               # Generic API testing guide
+└── README.md                           # This file
 ```
 
-## Testing Approaches
+## 🧪 Running Tests
 
-### Service-Level Integration Tests
-**Direct service instantiation** - Fast, focused, great for development
-```
-Test → Services → Cosmos DB / OpenAI
-```
-- Requires: OpenAI key in testsettings.json
-- Speed: ~10-15 seconds
-- Use for: Development, debugging, TDD
-
-### API-Level Integration Tests
-**HTTP calls to Functions app** - Complete stack validation
-```
-Test → HTTP → Azure Functions → Services → Cosmos DB / OpenAI
-```
-- Requires: Functions app running (local or Azure)
-- Speed: ~20-30 seconds
-- Use for: Pre-commit, deployment validation, CI/CD
-
-**See [API_TESTING_GUIDE.md](./API_TESTING_GUIDE.md) for detailed instructions**
-
-## Testing Frameworks
-
-- **xUnit** - Test framework
-- **Moq** - Mocking framework for dependencies
-- **FluentAssertions** - Readable, chainable assertions
-- **Microsoft.NET.Test.Sdk** - Test execution
-- **coverlet.collector** - Code coverage
-
-## Running Tests
-
-### Run All Tests
+### All Tests
 ```bash
-cd ProfileMatching.Tests
 dotnet test
 ```
 
-### Run with Code Coverage
+### Unit Tests Only
 ```bash
-dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
+dotnet test --filter "FullyQualifiedName~Unit"
 ```
 
-### Run Specific Test Class
+### Integration Tests Only
 ```bash
-dotnet test --filter ProfileServiceTests
+dotnet test --filter "FullyQualifiedName~Integration"
 ```
 
-### Run Specific Test Method
-```bash
-dotnet test --filter "ProfileServiceTests.GetProfileAsync_WithValidId_ReturnsProfile"
-```
+## ✅ What's Currently Tested
 
-## Test Categories
+### Generic Entity Tests
+- ✅ Entity initialization and default values
+- ✅ Attribute storage and retrieval
+- ✅ Metadata storage and retrieval
+- ✅ Privacy settings
+- ✅ Timestamps
+- ✅ External references
+- ✅ Entity type assignment
 
-### Unit Tests (Services/)
+## 🚧 Future Generic Tests (To Add)
 
-**ProfileServiceTests** - 15+ tests covering:
-- ✅ CRUD operations (Create, Read, Update, Delete)
-- ✅ Ownership validation
-- ✅ Profile search functionality
-- ✅ Timestamp handling
-- ✅ Error handling (not found, cosmos exceptions)
+When implementing, ensure tests remain entity-agnostic:
 
-**ProfileSummaryServiceTests** - 15+ tests covering:
-- ✅ Summary generation from profiles
-- ✅ All preference category inclusion
-- ✅ Accessibility and dietary restrictions
-- ✅ Conversation context integration
-- ✅ Metadata tracking (word count, categories)
-- ✅ Comprehensive profile handling
+### Generic Service Tests
+- [ ] `EntityService` CRUD operations (any entity type)
+- [ ] Generic similarity search algorithms
+- [ ] Generic attribute filtering
+- [ ] Privacy enforcement (cross-entity-type)
 
-### Integration Tests (Integration/)
+### Generic Integration Tests
+- [ ] Cosmos DB serialization/deserialization (any entity)
+- [ ] Generic embedding storage
+- [ ] Cross-entity-type search
 
-**ProfileFunctionsTests** - 20+ tests covering:
-- ✅ HTTP OPTIONS (CORS preflight)
-- ✅ GET /api/v1/profiles (list)
-- ✅ GET /api/v1/profiles/{id} (retrieve)
-- ✅ POST /api/v1/profiles (create)
-- ✅ PUT /api/v1/profiles/{id} (update)
-- ✅ DELETE /api/v1/profiles/{id} (delete)
-- ✅ Request validation
-- ✅ Error handling
-- ✅ Ownership verification
+## 🔍 Example: Generic vs Entity-Specific Test
 
-**EmbeddingStorageServiceIntegrationTests** - Tests covering:
-- ✅ Get/Upsert/Delete embedding operations
-- ✅ Query by status
-- ✅ Count by status
-- ✅ Edge cases (long summaries, metadata)
-
-**ProfileMatchingWorkflowIntegrationTests** - End-to-end workflow tests:
-- ✅ Complete workflow: Create profiles → Generate summaries → Generate embeddings → Search
-- ✅ Profile similarity search (profile-to-profile matching)
-- ✅ Text query-based search
-- ✅ Tests with diverse profile types:
-  - Outdoor Adventure Enthusiasts
-  - Artistic Introverts
-  - Tech Enthusiasts
-  - Social Butterflies
-  - Health & Wellness Advocates
-- ✅ Validates similarity scores and ranking
-- ✅ Tests cross-type dissimilarity
-
-## Test Helpers
-
-### TestDataFactory
-
-Provides factory methods for creating test data consistently:
-
-```csharp
-using ProfileMatching.Tests.Helpers;
-
-// Create minimal profile
-var profile = TestDataFactory.CreateMinimalProfile(userId: "user-123");
-
-// Create comprehensive profile with all preferences
-var fullProfile = TestDataFactory.CreateCompleteProfile(userId: "user-123");
-
-// Create specialized profiles with distinct characteristics
-var outdoorProfile = TestDataFactory.CreateOutdoorAdventureProfile(userId, "Alex Hiker");
-var artistProfile = TestDataFactory.CreateArtisticIntrovertProfile(userId, "Morgan Artist");
-var techProfile = TestDataFactory.CreateTechEnthusiastProfile(userId, "Casey Coder");
-var socialProfile = TestDataFactory.CreateSocialButterflyProfile(userId, "Jordan Party");
-var wellnessProfile = TestDataFactory.CreateHealthWellnessProfile(userId, "Taylor Zen");
-
-// Create specific preferences
-var stylePrefs = TestDataFactory.CreateStylePreferences();
-var giftPrefs = TestDataFactory.CreateGiftPreferences();
-
-// Create conversation context
-var conversation = TestDataFactory.CreateConversationContext(
-    profileId: "profile-id",
-    chunksCount: 5,
-    insightsCount: 3
-);
-
-// Create embeddings
-var embedding = TestDataFactory.CreateProfileEmbedding(profileId: "profile-id");
-var embeddingWithVector = TestDataFactory.CreateProfileEmbeddingWithVector(profileId: "profile-id");
-var vector = TestDataFactory.CreateTestEmbeddingVector(dimensions: 1536);
-```
-
-## Test Coverage Goals
-
-Target: **80%+ code coverage** for all components
-
-Current Coverage:
-- ✅ ProfileService: 85%+
-- ✅ ProfileSummaryService: 90%+
-- ✅ ProfileFunctions: 75%+
-- ⏳ ConversationService: Pending
-- ⏳ EmbeddingStorageService: Pending
-- ⏳ ConversationFunctions: Pending
-- ⏳ GenerateProfileSummariesFunction: Pending
-
-## Writing New Tests
-
-### Example: Service Unit Test
-
+### ✅ GOOD (Generic - Belongs Here)
 ```csharp
 [Fact]
-public async Task MethodName_WithScenario_ExpectedBehavior()
+public void Entity_SetAttribute_StoresValue()
 {
-    // Arrange
-    var mockDependency = new Mock<IDependency>();
-    mockDependency.Setup(d => d.MethodAsync(It.IsAny<string>()))
-        .ReturnsAsync(expectedResult);
-
-    var service = new MyService(mockDependency.Object, _mockLogger.Object);
-
-    // Act
-    var result = await service.MethodUnderTest("input");
-
-    // Assert
-    result.Should().NotBeNull();
-    result.Property.Should().Be("expected value");
-    mockDependency.Verify(d => d.MethodAsync("input"), Times.Once);
+    var entity = new Entity();
+    entity.SetAttribute("key", "value");
+    entity.GetAttribute<string>("key").Should().Be("value");
 }
 ```
 
-### Example: Azure Function Integration Test
-
+### ❌ BAD (PersonEntity-Specific - Belongs in ProfileMatchingAPI)
 ```csharp
 [Fact]
-public async Task FunctionName_WithValidInput_ReturnsExpectedStatus()
+public void PersonEntity_WithGiftPreferences_GeneratesSummary()
+{
+    var person = new PersonEntity
+    {
+        GiftPreferences = new GiftPreferences { ... }
+    };
+    // This tests PersonEntity-specific logic!
+}
+```
+
+## 🔗 Related Projects
+
+- **ProfileMatchingAPI** - Person matching with full PersonEntity test coverage
+- **EntityMatchingAPI** - This project - Generic infrastructure
+
+## 📝 Adding New Tests
+
+### Guidelines:
+1. **Ask yourself:** Does this test work with ANY entity type?
+   - YES → Add it here
+   - NO → Add it to the entity-specific project
+
+2. **Use base `Entity` class only** - Don't reference `PersonEntity`, `JobEntity`, etc.
+
+3. **Test contracts, not implementations** - Test that services accept and return `Entity`, not derived types
+
+4. **Mock entity-specific behavior** - Use generic test data, not real-world person/job data
+
+### Example Generic Test:
+```csharp
+[Fact]
+public async Task EntityService_GetEntity_ReturnsEntity()
 {
     // Arrange
-    var mockRequest = CreateMockHttpRequest("POST", "{\"data\":\"value\"}");
-
-    _mockService.Setup(s => s.ProcessAsync(It.IsAny<Data>()))
-        .ReturnsAsync(expectedResult);
+    var entity = new Entity { Name = "Test", EntityType = EntityType.Person };
+    await service.AddEntityAsync(entity);
 
     // Act
-    var response = await _function.EndpointName(mockRequest.Object);
+    var retrieved = await service.GetEntityAsync(entity.Id.ToString());
 
     // Assert
-    response.StatusCode.Should().Be(HttpStatusCode.OK);
-    _mockService.Verify(s => s.ProcessAsync(It.IsAny<Data>()), Times.Once);
+    retrieved.Should().NotBeNull();
+    retrieved.Name.Should().Be("Test");
 }
 ```
 
-## Best Practices
+## 🎓 Why This Architecture?
 
-### Test Naming
-Use the pattern: `MethodName_WithScenario_ExpectedBehavior`
-- ✅ `GetProfileAsync_WithValidId_ReturnsProfile`
-- ✅ `CreateProfile_WithoutName_ReturnsBadRequest`
-- ❌ `TestGetProfile`
-- ❌ `Test1`
+### Benefits:
+1. **Clear separation of concerns** - Generic infrastructure vs domain logic
+2. **Independent development** - Person, Job, Property teams work independently
+3. **Reduced coupling** - Core engine doesn't depend on specific entity types
+4. **Easier testing** - Generic tests are simpler and faster
+5. **Scalability** - New entity types don't bloat the core test suite
 
-### Arrange-Act-Assert (AAA)
-Always structure tests with clear sections:
-```csharp
-// Arrange - Set up test data and mocks
+### Trade-offs:
+- More projects to maintain
+- Need to decide "generic vs specific" boundary
+- Some duplication of test helpers across projects
 
-// Act - Execute the method being tested
+## 🛠️ Configuration
 
-// Assert - Verify expected outcomes
-```
+Tests use `testsettings.json` for Azure configuration:
+- Cosmos DB connection string
+- OpenAI API key (for embedding tests)
+- Test database name
 
-### FluentAssertions
-Use FluentAssertions for readable, maintainable assertions:
-```csharp
-// ✅ Good
-result.Should().NotBeNull();
-result.Name.Should().Be("Expected Name");
-result.Items.Should().HaveCount(3);
-result.Items.Should().OnlyContain(i => i.IsActive);
+See `TESTING_GUIDE.md` for full configuration instructions.
 
-// ❌ Avoid
-Assert.NotNull(result);
-Assert.Equal("Expected Name", result.Name);
-Assert.Equal(3, result.Items.Count);
-```
+## 📊 Test Coverage
 
-### Mock Verification
-Always verify important interactions:
-```csharp
-// Verify method was called
-_mockService.Verify(s => s.MethodAsync(expectedParam), Times.Once);
+Current coverage:
+- **Unit Tests**: Generic Entity model (100%)
+- **Integration Tests**: None yet (to be added)
 
-// Verify method was never called
-_mockService.Verify(s => s.DeleteAsync(It.IsAny<string>()), Times.Never);
-```
-
-### Test Independence
-Each test should be independent and not rely on other tests:
-- ✅ Use fresh mocks for each test
-- ✅ Use TestDataFactory for consistent data
-- ❌ Don't share state between tests
-- ❌ Don't assume test execution order
-
-## Continuous Integration
-
-Tests run automatically on:
-- Every commit
-- Every pull request
-- Before deployment
-
-All tests must pass before merging to main branch.
-
-## Integration Test Configuration
-
-### Prerequisites for ProfileMatchingWorkflowIntegrationTests
-
-These tests require:
-1. **Cosmos DB Connection** - For profile and embedding storage
-2. **OpenAI API Key** - For generating embeddings
-
-### Configuration Setup
-
-Configure `testsettings.json` in the test project:
-
-```json
-{
-  "CosmosDb": {
-    "ConnectionString": "YOUR_COSMOS_DB_CONNECTION_STRING",
-    "DatabaseId": "ProfileMatchingTestDB",
-    "ProfilesContainerId": "profiles",
-    "ConversationsContainerId": "conversations",
-    "EmbeddingsContainerId": "embeddings"
-  },
-  "OpenAI": {
-    "ApiKey": "YOUR_OPENAI_API_KEY",
-    "EmbeddingModel": "text-embedding-3-small",
-    "EmbeddingDimensions": "1536",
-    "MaxRetries": "3"
-  }
-}
-```
-
-### Running Integration Tests
-
-```bash
-# Run all integration tests
-dotnet test --filter FullyQualifiedName~Integration
-
-# Run only workflow tests
-dotnet test --filter FullyQualifiedName~ProfileMatchingWorkflowIntegrationTests
-
-# Run specific workflow test
-dotnet test --filter "FullyQualifiedName~CompleteWorkflow_CreateProfilesGenerateEmbeddingsAndSearch"
-```
-
-### Cost Considerations
-
-**OpenAI API Costs:**
-- `text-embedding-3-small`: ~$0.00002 per 1K tokens
-- Each workflow test creates 7 profiles: ~0.014 - 0.035 cents per run
-- Query search test creates 3 profiles + 3 queries: ~0.012 - 0.020 cents per run
-
-**Cosmos DB Costs:**
-- Uses serverless billing
-- Tests automatically clean up after themselves
-- Minimal cost impact
-
-## License Testing
-
-Since this API is intended for licensing to other companies, tests should:
-- ✅ Cover all public API endpoints
-- ✅ Verify authentication and authorization
-- ✅ Test rate limiting and quotas
-- ✅ Validate error responses
-- ✅ Ensure CORS configuration
-- ✅ Test subscription tier enforcement
-- ✅ Validate vector similarity search accuracy
-- ✅ Test embedding generation and storage
-
-## Support
-
-For questions about tests:
-- Review existing tests for examples
-- Check this README for patterns
-- Refer to xUnit, Moq, and FluentAssertions documentation
+Target coverage:
+- Core entity operations: 80%+
+- Generic services: 70%+
+- Infrastructure: 60%+
 
 ---
 
-**Test Coverage is Quality Assurance**
-
-Comprehensive testing ensures the ProfileMatchingAPI is reliable, secure, and ready for production use by licensed clients.
+**Remember:** If your test mentions PersonEntity, StylePreferences, JobEntity, or any entity-specific type, it belongs in a domain-specific test project, not here!
