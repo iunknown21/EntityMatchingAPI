@@ -28,8 +28,6 @@ namespace EntityMatching.Infrastructure.Services.SummaryStrategies
 
         public async Task<EntitySummaryResult> GenerateSummaryAsync(Entity entity, ConversationContext? conversation = null)
         {
-            var job = entity as JobEntity;
-
             var summary = new StringBuilder();
             var metadata = new SummaryMetadata();
 
@@ -37,93 +35,8 @@ namespace EntityMatching.Infrastructure.Services.SummaryStrategies
             summary.AppendLine($"Job Opening: {entity.Name}");
             summary.AppendLine($"Description: {entity.Description}");
 
-            if (job != null)
-            {
-                // Company & Location
-                if (!string.IsNullOrEmpty(job.CompanyName))
-                    summary.AppendLine($"Company: {job.CompanyName}");
-
-                if (!string.IsNullOrEmpty(job.Department))
-                    summary.AppendLine($"Department: {job.Department}");
-
-                if (!string.IsNullOrEmpty(job.Location))
-                {
-                    summary.AppendLine(job.RemoteOk
-                        ? $"Location: {job.Location} (Remote available)"
-                        : $"Location: {job.Location}");
-                }
-                else if (job.RemoteOk)
-                {
-                    summary.AppendLine("Location: Remote");
-                }
-
-                // Job Details
-                if (!string.IsNullOrEmpty(job.EmploymentType))
-                    summary.AppendLine($"Employment Type: {job.EmploymentType}");
-
-                if (!string.IsNullOrEmpty(job.Level))
-                    summary.AppendLine($"Level: {job.Level}");
-
-                // Requirements Section
-                summary.AppendLine();
-                summary.AppendLine("=== Requirements ===");
-
-                if (job.RequiredSkills?.Any() == true)
-                {
-                    summary.AppendLine($"Required Skills: {string.Join(", ", job.RequiredSkills)}");
-                    metadata.PreferenceCategories.Add("Required Skills");
-                }
-
-                if (job.PreferredSkills?.Any() == true)
-                {
-                    summary.AppendLine($"Preferred Skills: {string.Join(", ", job.PreferredSkills)}");
-                    metadata.PreferenceCategories.Add("Preferred Skills");
-                }
-
-                if (job.MinYearsExperience > 0)
-                {
-                    var expText = job.MaxYearsExperience > 0
-                        ? $"{job.MinYearsExperience}-{job.MaxYearsExperience} years"
-                        : $"{job.MinYearsExperience}+ years";
-                    summary.AppendLine($"Experience Required: {expText}");
-                }
-
-                if (!string.IsNullOrEmpty(job.EducationRequired))
-                    summary.AppendLine($"Education: {job.EducationRequired}");
-
-                // Compensation & Benefits
-                if (job.MinSalary.HasValue || job.MaxSalary.HasValue)
-                {
-                    summary.AppendLine();
-                    summary.AppendLine("=== Compensation ===");
-
-                    if (job.MinSalary.HasValue && job.MaxSalary.HasValue)
-                        summary.AppendLine($"Salary Range: ${job.MinSalary:N0} - ${job.MaxSalary:N0}");
-                    else if (job.MinSalary.HasValue)
-                        summary.AppendLine($"Minimum Salary: ${job.MinSalary:N0}");
-                    else if (job.MaxSalary.HasValue)
-                        summary.AppendLine($"Maximum Salary: ${job.MaxSalary:N0}");
-
-                    metadata.PreferenceCategories.Add("Compensation");
-                }
-
-                if (job.Benefits?.Any() == true)
-                {
-                    summary.AppendLine($"Benefits: {string.Join(", ", job.Benefits)}");
-                }
-
-                // Timeline
-                if (job.ApplicationDeadline.HasValue)
-                {
-                    summary.AppendLine();
-                    summary.AppendLine($"Application Deadline: {job.ApplicationDeadline.Value:yyyy-MM-dd}");
-                }
-            }
-            else
-            {
-                // Fallback: extract from attributes
-                AppendFromAttributes(summary, entity, metadata);
-            }
+            // Extract job-specific data from attributes
+            AppendFromAttributes(summary, entity, metadata);
 
             // Conversation Insights (e.g., from conversational job posting creation)
             if (conversation?.ExtractedInsights?.Any() == true)

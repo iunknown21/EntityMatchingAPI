@@ -29,7 +29,6 @@ namespace EntityMatching.Infrastructure.Services.SummaryStrategies
 
         public async Task<EntitySummaryResult> GenerateSummaryAsync(Entity entity, ConversationContext? conversation = null)
         {
-            var major = entity as MajorEntity;
             var summary = new StringBuilder();
             var metadata = new SummaryMetadata();
 
@@ -42,48 +41,48 @@ namespace EntityMatching.Infrastructure.Services.SummaryStrategies
             }
 
             // CIP Code
-            var cipCode = major?.CipCode ?? GetAttributeValue<string>(entity, "cipCode");
+            var cipCode = GetAttributeValue<string>(entity, "cipCode");
             if (!string.IsNullOrEmpty(cipCode))
             {
                 summary.AppendLine($"CIP Code: {cipCode}");
             }
 
             // Degree Level
-            var degreeLevel = major?.DegreeLevel ?? GetAttributeValue<string>(entity, "degreeLevel");
+            var degreeLevel = GetAttributeValue<string>(entity, "degreeLevel");
             if (!string.IsNullOrEmpty(degreeLevel))
             {
                 summary.AppendLine($"Degree Level: {degreeLevel}");
             }
 
             // Field Category
-            var fieldCategory = major?.FieldCategory ?? GetAttributeValue<string>(entity, "fieldCategory");
+            var fieldCategory = GetAttributeValue<string>(entity, "fieldCategory");
             if (!string.IsNullOrEmpty(fieldCategory))
             {
                 summary.AppendLine($"Field: {fieldCategory}");
             }
 
             // Salary Information
-            var startingSalary = major?.AverageStartingSalary ?? GetAttributeValue<decimal?>(entity, "averageStartingSalary");
+            var startingSalary = GetAttributeValue<decimal?>(entity, "averageStartingSalary");
             if (startingSalary.HasValue)
             {
                 summary.AppendLine($"Average Starting Salary: ${startingSalary:N0}/year");
             }
 
-            var midCareerSalary = major?.MidCareerSalary ?? GetAttributeValue<decimal?>(entity, "midCareerSalary");
+            var midCareerSalary = GetAttributeValue<decimal?>(entity, "midCareerSalary");
             if (midCareerSalary.HasValue)
             {
                 summary.AppendLine($"Mid-Career Salary: ${midCareerSalary:N0}/year");
             }
 
             // Employment Rate
-            var employmentRate = major?.EmploymentRate ?? GetAttributeValue<double?>(entity, "employmentRate");
+            var employmentRate = GetAttributeValue<double?>(entity, "employmentRate");
             if (employmentRate.HasValue)
             {
                 summary.AppendLine($"Employment Rate: {employmentRate:P1}");
             }
 
             // Core Competencies
-            var competencies = major?.CoreCompetencies ?? GetAttributeList(entity, "coreCompetencies");
+            var competencies = GetAttributeList(entity, "coreCompetencies");
             if (competencies != null && competencies.Count > 0)
             {
                 metadata.PreferenceCategories.Add("Competencies");
@@ -100,7 +99,7 @@ namespace EntityMatching.Infrastructure.Services.SummaryStrategies
             }
 
             // Skills Developed
-            var skills = major?.SkillsDeveloped ?? GetAttributeList(entity, "skillsDeveloped");
+            var skills = GetAttributeList(entity, "skillsDeveloped");
             if (skills != null && skills.Count > 0)
             {
                 metadata.PreferenceCategories.Add("Skills");
@@ -117,7 +116,7 @@ namespace EntityMatching.Infrastructure.Services.SummaryStrategies
             }
 
             // Typical Courses
-            var courses = major?.TypicalCourses ?? GetAttributeList(entity, "typicalCourses");
+            var courses = GetAttributeList(entity, "typicalCourses");
             if (courses != null && courses.Count > 0)
             {
                 summary.AppendLine();
@@ -133,7 +132,7 @@ namespace EntityMatching.Infrastructure.Services.SummaryStrategies
             }
 
             // Career Pathways
-            var relatedCareers = major?.RelatedCareers ?? GetAttributeList(entity, "relatedCareers");
+            var relatedCareers = GetAttributeList(entity, "relatedCareers");
             if (relatedCareers != null && relatedCareers.Count > 0)
             {
                 summary.AppendLine();
@@ -150,7 +149,7 @@ namespace EntityMatching.Infrastructure.Services.SummaryStrategies
             }
 
             // Common Industries
-            var industries = major?.CommonIndustries ?? GetAttributeList(entity, "commonIndustries");
+            var industries = GetAttributeList(entity, "commonIndustries");
             if (industries != null && industries.Count > 0)
             {
                 summary.AppendLine();

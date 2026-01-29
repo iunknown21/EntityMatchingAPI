@@ -77,7 +77,7 @@ namespace EntityMatching.Functions
 
         #endregion
 
-        #region Get PersonEntity by ID
+        #region Get Entity by ID
 
         // OPTIONS handler for /api/v1/entities/{id}
         [Function("GetEntityByIdOptions")]
@@ -135,7 +135,7 @@ namespace EntityMatching.Functions
 
         #endregion
 
-        #region Create PersonEntity
+        #region Create Entity
 
         // OPTIONS handler for /api/v1/entities (create)
         [Function("CreateEntityOptions")]
@@ -203,7 +203,7 @@ namespace EntityMatching.Functions
 
         #endregion
 
-        #region Update PersonEntity
+        #region Update Entity
 
         // OPTIONS handler for /api/v1/entities/{id} (update)
         [Function("UpdateEntityOptions")]
@@ -235,7 +235,7 @@ namespace EntityMatching.Functions
                     return CreateBadRequestResponse(req, "Request body is required");
                 }
 
-                var profile = JsonHelper.DeserializeApi<PersonEntity>(requestBody);
+                var profile = JsonHelper.DeserializeApi<Entity>(requestBody);
 
                 if (profile == null)
                 {
@@ -245,14 +245,14 @@ namespace EntityMatching.Functions
                 // Ensure ID matches route parameter
                 if (profile.Id.ToString() != id)
                 {
-                    return CreateBadRequestResponse(req, "PersonEntity ID in body must match route parameter");
+                    return CreateBadRequestResponse(req, "Entity ID in body must match route parameter");
                 }
 
                 // Verify profile exists
                 var existing = await _profileService.GetEntityAsync(id);
                 if (existing == null)
                 {
-                    return CreateNotFoundResponse(req, $"PersonEntity {id} not found");
+                    return CreateNotFoundResponse(req, $"Entity {id} not found");
                 }
 
                 // Optional: Verify ownership if userId provided
@@ -282,7 +282,7 @@ namespace EntityMatching.Functions
 
         #endregion
 
-        #region Delete PersonEntity
+        #region Delete Entity
 
         // OPTIONS handler for /api/v1/entities/{id} (delete)
         [Function("DeleteEntityOptions")]
@@ -306,7 +306,7 @@ namespace EntityMatching.Functions
                 var existing = await _profileService.GetEntityAsync(id);
                 if (existing == null)
                 {
-                    return CreateNotFoundResponse(req, $"PersonEntity {id} not found");
+                    return CreateNotFoundResponse(req, $"Entity {id} not found");
                 }
 
                 // Optional: Verify ownership if userId provided
@@ -409,7 +409,7 @@ namespace EntityMatching.Functions
             }
             catch (InvalidOperationException ex)
             {
-                _logger.LogError(ex, "PersonEntity {ProfileId} not found", id);
+                _logger.LogError(ex, "Entity {ProfileId} not found", id);
                 return CreateNotFoundResponse(req, ex.Message);
             }
             catch (Exception ex)

@@ -24,11 +24,12 @@ namespace EntityMatching.Infrastructure.Services
 
         /// <summary>
         /// Helper method to safely cast Entity to PersonEntity
-        /// Returns null if entity is not a PersonEntity
+        /// NOTE: PersonEntity has been removed. This always returns null, causing person-specific event logic to be skipped.
+        /// TODO: Refactor to use Entity.Attributes dictionary for person preferences
         /// </summary>
-        private PersonEntity? AsPersonEntity(Entity entity)
+        private dynamic? AsPersonEntity(Entity entity)
         {
-            return entity as PersonEntity;
+            return null; // PersonEntity type has been removed - person-specific event matching disabled
         }
 
         /// <summary>
@@ -369,8 +370,8 @@ namespace EntityMatching.Infrastructure.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error generating profile summary for {ProfileId}", person.Id);
-                return $"Events for {person.Name} in {parameters.Location}";
+                _logger.LogError(ex, "Error generating profile summary for {ProfileId}", (object)profile.Id);
+                return $"Events for {profile.Name} in {parameters.Location}";
             }
         }
 
@@ -499,8 +500,8 @@ namespace EntityMatching.Infrastructure.Services
             // Preferred learning style
             if (person.LearningPreferences.LearningStyles?.Any() == true)
             {
-                var hasHandsOn = person.LearningPreferences.LearningStyles
-                    .Any(style => style.Contains("hands", StringComparison.OrdinalIgnoreCase));
+                var learningStyles = (IEnumerable<string>)person.LearningPreferences.LearningStyles;
+                var hasHandsOn = learningStyles.Any(style => style.Contains("hands", StringComparison.OrdinalIgnoreCase));
                 if (hasHandsOn)
                 {
                     queries.Add($"hands-on interactive workshop events {location} {timeframe}");
@@ -530,7 +531,7 @@ namespace EntityMatching.Infrastructure.Services
             if (person.NaturePreferences.PreferredSeasons?.Any() == true)
             {
                 var currentSeason = GetCurrentSeason();
-                if (person.NaturePreferences.PreferredSeasons.Contains(currentSeason, StringComparer.OrdinalIgnoreCase))
+                if (((IEnumerable<string>)person.NaturePreferences.PreferredSeasons).Contains(currentSeason, StringComparer.OrdinalIgnoreCase))
                 {
                     queries.Add($"outdoor {currentSeason} events {location} {timeframe}");
                 }

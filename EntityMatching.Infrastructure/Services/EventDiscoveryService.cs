@@ -300,7 +300,9 @@ namespace EntityMatching.Infrastructure.Services
         /// </summary>
         private void GenerateMatchReasons(Event eventItem, Entity profile)
         {
-            var person = profile as PersonEntity;
+            // NOTE: PersonEntity has been removed. This method is temporarily disabled.
+            // TODO: Refactor to use Entity.Attributes dictionary for person preferences
+            dynamic? person = null; // PersonEntity type removed
             if (person == null) return; // Not a person entity, no person-specific match reasons
 
             eventItem.MatchReasons = new Dictionary<string, string>();

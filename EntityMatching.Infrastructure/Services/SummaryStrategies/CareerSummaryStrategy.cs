@@ -29,7 +29,6 @@ namespace EntityMatching.Infrastructure.Services.SummaryStrategies
 
         public async Task<EntitySummaryResult> GenerateSummaryAsync(Entity entity, ConversationContext? conversation = null)
         {
-            var career = entity as CareerEntity;
             var summary = new StringBuilder();
             var metadata = new SummaryMetadata();
 
@@ -42,41 +41,41 @@ namespace EntityMatching.Infrastructure.Services.SummaryStrategies
             }
 
             // O*NET Code
-            var onetCode = career?.OnetCode ?? GetAttributeValue<string>(entity, "onetCode");
+            var onetCode = GetAttributeValue<string>(entity, "onetCode");
             if (!string.IsNullOrEmpty(onetCode))
             {
                 summary.AppendLine($"O*NET Code: {onetCode}");
             }
 
             // Education Level
-            var educationLevel = career?.EducationLevel ?? GetAttributeValue<string>(entity, "educationLevel");
+            var educationLevel = GetAttributeValue<string>(entity, "educationLevel");
             if (!string.IsNullOrEmpty(educationLevel))
             {
                 summary.AppendLine($"Education Required: {educationLevel}");
             }
 
             // Job Zone
-            var jobZone = career?.JobZone ?? GetAttributeValue<int?>(entity, "jobZone");
+            var jobZone = GetAttributeValue<int?>(entity, "jobZone");
             if (jobZone.HasValue)
             {
                 summary.AppendLine($"Job Zone: {jobZone} (Preparation Level)");
             }
 
             // Salary Information
-            var medianSalary = career?.MedianSalary ?? GetAttributeValue<decimal?>(entity, "medianSalary");
+            var medianSalary = GetAttributeValue<decimal?>(entity, "medianSalary");
             if (medianSalary.HasValue)
             {
                 summary.AppendLine($"Median Salary: ${medianSalary:N0}/year");
             }
 
-            var growthOutlook = career?.GrowthOutlook ?? GetAttributeValue<string>(entity, "growthOutlook");
+            var growthOutlook = GetAttributeValue<string>(entity, "growthOutlook");
             if (!string.IsNullOrEmpty(growthOutlook))
             {
                 summary.AppendLine($"Job Growth Outlook: {growthOutlook}");
             }
 
             // Skills
-            var skills = career?.Skills ?? GetAttributeList(entity, "skills");
+            var skills = GetAttributeList(entity, "skills");
             if (skills != null && skills.Count > 0)
             {
                 metadata.PreferenceCategories.Add("Skills");
@@ -93,7 +92,7 @@ namespace EntityMatching.Infrastructure.Services.SummaryStrategies
             }
 
             // Knowledge Areas
-            var knowledge = career?.Knowledge ?? GetAttributeList(entity, "knowledge");
+            var knowledge = GetAttributeList(entity, "knowledge");
             if (knowledge != null && knowledge.Count > 0)
             {
                 metadata.PreferenceCategories.Add("Knowledge");
@@ -110,7 +109,7 @@ namespace EntityMatching.Infrastructure.Services.SummaryStrategies
             }
 
             // Abilities
-            var abilities = career?.Abilities ?? GetAttributeList(entity, "abilities");
+            var abilities = GetAttributeList(entity, "abilities");
             if (abilities != null && abilities.Count > 0)
             {
                 summary.AppendLine();
@@ -126,7 +125,7 @@ namespace EntityMatching.Infrastructure.Services.SummaryStrategies
             }
 
             // Tasks
-            var tasks = career?.Tasks ?? GetAttributeList(entity, "tasks");
+            var tasks = GetAttributeList(entity, "tasks");
             if (tasks != null && tasks.Count > 0)
             {
                 summary.AppendLine();
@@ -142,7 +141,7 @@ namespace EntityMatching.Infrastructure.Services.SummaryStrategies
             }
 
             // RIASEC Interests
-            var interests = career?.Interests ?? GetAttributeDictionary(entity, "interests");
+            var interests = GetAttributeDictionary(entity, "interests");
             if (interests != null && interests.Count > 0)
             {
                 summary.AppendLine();
@@ -154,7 +153,7 @@ namespace EntityMatching.Infrastructure.Services.SummaryStrategies
             }
 
             // Related Majors
-            var relatedMajors = career?.RelatedMajors ?? GetAttributeList(entity, "relatedMajors");
+            var relatedMajors = GetAttributeList(entity, "relatedMajors");
             if (relatedMajors != null && relatedMajors.Count > 0)
             {
                 summary.AppendLine();

@@ -244,16 +244,20 @@ namespace EntityMatching.Functions
                     // Create profile with variety
                     var personaIndex = i % _personas.Length;
 
-                    var profile = new PersonEntity
+                    var profile = new Entity
                     {
                         Id = Guid.NewGuid(),
+                        EntityType = EntityType.Person,
                         Name = $"Test {_personas[personaIndex]} {i + 1}",
                         Description = _testBios[personaIndex],
                         OwnedByUserId = userId,
-                        ContactInformation = "Seattle, WA",
-                        Birthday = DateTime.UtcNow.AddYears(-30),
                         CreatedAt = DateTime.UtcNow,
-                        LastModified = DateTime.UtcNow
+                        LastModified = DateTime.UtcNow,
+                        Attributes = new Dictionary<string, object>
+                        {
+                            ["contactInformation"] = "Seattle, WA",
+                            ["birthday"] = DateTime.UtcNow.AddYears(-30)
+                        }
                     };
 
                     // Add profile to database
@@ -474,7 +478,7 @@ namespace EntityMatching.Functions
                 var errors = new List<string>();
 
                 // Get all profiles (paginate if needed)
-                var allProfiles = new List<PersonEntity>();
+                var allProfiles = new List<Entity>();
                 try
                 {
                     // This is a simplified approach - in production, use pagination
@@ -495,7 +499,7 @@ namespace EntityMatching.Functions
                     {
                         message = "Migration endpoint placeholder - implement proper profile iteration",
                         dryRun = dryRun,
-                        recommendation = "Set default privacy settings in PersonEntity constructor instead"
+                        recommendation = "Set default privacy settings in Entity constructor instead"
                     });
                     return placeholderResponse;
                 }
