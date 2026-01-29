@@ -118,7 +118,24 @@
       "Bash(if [ -f \"D:\\\\Development\\\\Main\\\\EntityMatchingAPI\\\\README.md\" ])",
       "Bash(then sed -i 's|/api/v1/profiles|/api/v1/entities|g; s/ProfileMatch\\\\b/EntityMatch/g; s/ProfileRating\\\\b/EntityRating/g; s/IProfileService\\\\b/IEntityService/g; s/ProfileService\\\\b/EntityService/g' \"D:\\\\Development\\\\Main\\\\EntityMatchingAPI\\\\README.md\")",
       "Bash(else echo \"No README found\")",
-      "Bash(fi)"
+      "Bash(fi)",
+      "Bash(pwsh -File deploy-azure-infrastructure.ps1)",
+      "Bash(powershell.exe -ExecutionPolicy Bypass -File deploy-azure-infrastructure.ps1)",
+      "Bash(az logout:*)",
+      "Bash(az login:*)",
+      "Bash(az cosmosdb create:*)",
+      "Bash(az cosmosdb delete:*)",
+      "Bash(az cosmosdb sql database create:*)",
+      "Bash(do az cosmosdb sql container create --account-name entitymatchingdb --resource-group entitymatchingai --database-name EntityMatchingDB --name $container --partition-key-path \"/id\" --output table)",
+      "Bash(az keyvault create:*)",
+      "Bash(az role assignment create:*)",
+      "Bash(az keyvault delete:*)",
+      "Bash(az keyvault purge:*)",
+      "Bash(az cosmosdb keys list:*)",
+      "Bash(az functionapp list-functions:*)",
+      "Bash(python:*)",
+      "Bash(test:*)",
+      "Bash(tree:*)"
     ]
   }
 }
