@@ -93,5 +93,33 @@ services.AddScoped<IMyService>(sp =>
 - Keep C# code using PascalCase (standard C# convention)
 - Let the serialization configuration bridge the gap automatically
 
-## Documentation 
+## Azure Functions Reserved Keywords
+
+### CRITICAL: 'admin' is a Reserved Route Prefix
+
+**NEVER use 'admin' as a route prefix in Azure Functions.**
+
+Azure Functions reserves `/admin/*` for internal management endpoints:
+- `/admin/functions/{functionName}` - Manual function triggers
+- `/admin/host/*` - Host management
+- `/admin/vfs/*` - Virtual file system
+
+❌ **Will NOT work:**
+```csharp
+[HttpTrigger(AuthorizationLevel.Function, "get", Route = "admin/embeddings/status")]
+```
+
+✅ **Use alternative prefixes:**
+```csharp
+[HttpTrigger(AuthorizationLevel.Function, "get", Route = "super/embeddings/status")]
+// or "api-admin", "management", "internal", etc.
+```
+
+**Symptoms of using 'admin':**
+- Functions appear in Azure CLI function list
+- Routes show correct InvokeUrlTemplate
+- But all requests return 404 Not Found
+- No error messages in logs
+
+## Documentation
 All Markdown files belong in the docs subfolder
