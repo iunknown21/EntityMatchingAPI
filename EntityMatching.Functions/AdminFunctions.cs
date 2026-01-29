@@ -18,7 +18,7 @@ namespace EntityMatching.Functions
 {
     /// <summary>
     /// Admin endpoints for testing and debugging embedding infrastructure
-    /// Prefix: /api/admin/
+    /// Prefix: /api/super/
     /// </summary>
     public class AdminFunctions : BaseApiFunction
     {
@@ -61,15 +61,15 @@ namespace EntityMatching.Functions
             _configuration = configuration;
         }
 
-        #region GET /api/admin/test - Simple test endpoint
+        #region GET /api/super/test - Simple test endpoint
 
         /// <summary>
         /// Simple test endpoint to verify admin routes work
-        /// GET /api/admin/test
+        /// GET /api/super/test
         /// </summary>
         [Function("AdminTest")]
         public HttpResponseData AdminTest(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "admin/test")] HttpRequestData req)
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "super/test")] HttpRequestData req)
         {
             _logger.LogInformation("Admin test endpoint called");
 
@@ -103,11 +103,11 @@ namespace EntityMatching.Functions
 
         #endregion
 
-        #region POST /api/admin/embeddings/process
+        #region POST /api/super/embeddings/process
 
         [Function("AdminProcessEmbeddingsOptions")]
         public HttpResponseData AdminProcessEmbeddingsOptions(
-            [HttpTrigger(AuthorizationLevel.Function, "options", Route = "admin/embeddings/process")]
+            [HttpTrigger(AuthorizationLevel.Function, "options", Route = "super/embeddings/process")]
             HttpRequestData req)
         {
             return CreateNoContentResponse(req);
@@ -115,11 +115,11 @@ namespace EntityMatching.Functions
 
         /// <summary>
         /// Manually trigger embedding processing
-        /// POST /api/admin/embeddings/process?limit=10
+        /// POST /api/super/embeddings/process?limit=10
         /// </summary>
         [Function("AdminProcessEmbeddings")]
         public async Task<HttpResponseData> ProcessEmbeddings(
-            [HttpTrigger(AuthorizationLevel.Function, "post", Route = "admin/embeddings/process")]
+            [HttpTrigger(AuthorizationLevel.Function, "post", Route = "super/embeddings/process")]
             HttpRequestData req)
         {
             try
@@ -205,11 +205,11 @@ namespace EntityMatching.Functions
 
         #endregion
 
-        #region GET /api/admin/embeddings/status
+        #region GET /api/super/embeddings/status
 
         [Function("AdminGetEmbeddingStatusOptions")]
         public HttpResponseData AdminGetEmbeddingStatusOptions(
-            [HttpTrigger(AuthorizationLevel.Function, "options", Route = "admin/embeddings/status")]
+            [HttpTrigger(AuthorizationLevel.Function, "options", Route = "super/embeddings/status")]
             HttpRequestData req)
         {
             return CreateNoContentResponse(req);
@@ -217,11 +217,11 @@ namespace EntityMatching.Functions
 
         /// <summary>
         /// Get embedding status counts
-        /// GET /api/admin/embeddings/status
+        /// GET /api/super/embeddings/status
         /// </summary>
         [Function("AdminGetEmbeddingStatus")]
         public async Task<HttpResponseData> GetEmbeddingStatus(
-            [HttpTrigger(AuthorizationLevel.Function, "get", Route = "admin/embeddings/status")]
+            [HttpTrigger(AuthorizationLevel.Function, "get", Route = "super/embeddings/status")]
             HttpRequestData req)
         {
             try
@@ -244,11 +244,11 @@ namespace EntityMatching.Functions
 
         #endregion
 
-        #region POST /api/admin/test-data/profiles
+        #region POST /api/super/test-data/profiles
 
         [Function("AdminCreateTestEntitiesOptions")]
         public HttpResponseData AdminCreateTestEntitiesOptions(
-            [HttpTrigger(AuthorizationLevel.Function, "options", Route = "admin/test-data/profiles")]
+            [HttpTrigger(AuthorizationLevel.Function, "options", Route = "super/test-data/profiles")]
             HttpRequestData req)
         {
             return CreateNoContentResponse(req);
@@ -256,12 +256,12 @@ namespace EntityMatching.Functions
 
         /// <summary>
         /// Create test profiles with diverse preferences
-        /// POST /api/admin/test-data/profiles
+        /// POST /api/super/test-data/profiles
         /// Body: { "count": 5, "userId": "test-user" }
         /// </summary>
         [Function("AdminCreateTestEntities")]
         public async Task<HttpResponseData> CreateTestEntities(
-            [HttpTrigger(AuthorizationLevel.Function, "post", Route = "admin/test-data/profiles")]
+            [HttpTrigger(AuthorizationLevel.Function, "post", Route = "super/test-data/profiles")]
             HttpRequestData req)
         {
             try
@@ -326,11 +326,11 @@ namespace EntityMatching.Functions
 
         #endregion
 
-        #region GET /api/admin/embeddings/{entityId}
+        #region GET /api/super/embeddings/{entityId}
 
         [Function("AdminGetEmbeddingOptions")]
         public HttpResponseData AdminGetEmbeddingOptions(
-            [HttpTrigger(AuthorizationLevel.Function, "options", Route = "admin/embeddings/{entityId}")]
+            [HttpTrigger(AuthorizationLevel.Function, "options", Route = "super/embeddings/{entityId}")]
             HttpRequestData req,
             string entityId)
         {
@@ -339,11 +339,11 @@ namespace EntityMatching.Functions
 
         /// <summary>
         /// Get specific embedding details
-        /// GET /api/admin/embeddings/{entityId}
+        /// GET /api/super/embeddings/{entityId}
         /// </summary>
         [Function("AdminGetEmbedding")]
         public async Task<HttpResponseData> GetEmbedding(
-            [HttpTrigger(AuthorizationLevel.Function, "get", Route = "admin/embeddings/{entityId}")]
+            [HttpTrigger(AuthorizationLevel.Function, "get", Route = "super/embeddings/{entityId}")]
             HttpRequestData req,
             string entityId)
         {
@@ -372,11 +372,11 @@ namespace EntityMatching.Functions
 
         #endregion
 
-        #region POST /api/admin/embeddings/{entityId}/regenerate
+        #region POST /api/super/embeddings/{entityId}/regenerate
 
         [Function("AdminRegenerateEmbeddingOptions")]
         public HttpResponseData AdminRegenerateEmbeddingOptions(
-            [HttpTrigger(AuthorizationLevel.Function, "options", Route = "admin/embeddings/{entityId}/regenerate")]
+            [HttpTrigger(AuthorizationLevel.Function, "options", Route = "super/embeddings/{entityId}/regenerate")]
             HttpRequestData req,
             string entityId)
         {
@@ -385,11 +385,11 @@ namespace EntityMatching.Functions
 
         /// <summary>
         /// Force regenerate embedding for a profile
-        /// POST /api/admin/embeddings/{entityId}/regenerate
+        /// POST /api/super/embeddings/{entityId}/regenerate
         /// </summary>
         [Function("AdminRegenerateEmbedding")]
         public async Task<HttpResponseData> RegenerateEmbedding(
-            [HttpTrigger(AuthorizationLevel.Function, "post", Route = "admin/embeddings/{entityId}/regenerate")]
+            [HttpTrigger(AuthorizationLevel.Function, "post", Route = "super/embeddings/{entityId}/regenerate")]
             HttpRequestData req,
             string entityId)
         {
@@ -428,11 +428,11 @@ namespace EntityMatching.Functions
 
         #endregion
 
-        #region POST /api/admin/embeddings/retry-failed
+        #region POST /api/super/embeddings/retry-failed
 
         [Function("AdminRetryFailedEmbeddingsOptions")]
         public HttpResponseData AdminRetryFailedEmbeddingsOptions(
-            [HttpTrigger(AuthorizationLevel.Function, "options", Route = "admin/embeddings/retry-failed")]
+            [HttpTrigger(AuthorizationLevel.Function, "options", Route = "super/embeddings/retry-failed")]
             HttpRequestData req)
         {
             return CreateNoContentResponse(req);
@@ -440,11 +440,11 @@ namespace EntityMatching.Functions
 
         /// <summary>
         /// Reset all failed embeddings to pending
-        /// POST /api/admin/embeddings/retry-failed
+        /// POST /api/super/embeddings/retry-failed
         /// </summary>
         [Function("AdminRetryFailedEmbeddings")]
         public async Task<HttpResponseData> RetryFailedEmbeddings(
-            [HttpTrigger(AuthorizationLevel.Function, "post", Route = "admin/embeddings/retry-failed")]
+            [HttpTrigger(AuthorizationLevel.Function, "post", Route = "super/embeddings/retry-failed")]
             HttpRequestData req)
         {
             try
@@ -479,11 +479,11 @@ namespace EntityMatching.Functions
 
         #endregion
 
-        #region POST /api/admin/migrate/privacy-settings
+        #region POST /api/super/migrate/privacy-settings
 
         [Function("AdminMigratePrivacySettingsOptions")]
         public HttpResponseData AdminMigratePrivacySettingsOptions(
-            [HttpTrigger(AuthorizationLevel.Function, "options", Route = "admin/migrate/privacy-settings")]
+            [HttpTrigger(AuthorizationLevel.Function, "options", Route = "super/migrate/privacy-settings")]
             HttpRequestData req)
         {
             return CreateNoContentResponse(req);
@@ -491,11 +491,11 @@ namespace EntityMatching.Functions
 
         /// <summary>
         /// Initialize privacy settings on all existing profiles
-        /// POST /api/admin/migrate/privacy-settings?dryRun=false
+        /// POST /api/super/migrate/privacy-settings?dryRun=false
         /// </summary>
         [Function("AdminMigratePrivacySettings")]
         public async Task<HttpResponseData> MigratePrivacySettings(
-            [HttpTrigger(AuthorizationLevel.Function, "post", Route = "admin/migrate/privacy-settings")]
+            [HttpTrigger(AuthorizationLevel.Function, "post", Route = "super/migrate/privacy-settings")]
             HttpRequestData req)
         {
             try
@@ -575,11 +575,11 @@ namespace EntityMatching.Functions
 
         #endregion
 
-        #region POST /api/admin/summaries/generate
+        #region POST /api/super/summaries/generate
 
         [Function("AdminGenerateSummariesOptions")]
         public HttpResponseData AdminGenerateSummariesOptions(
-            [HttpTrigger(AuthorizationLevel.Function, "options", Route = "admin/summaries/generate")]
+            [HttpTrigger(AuthorizationLevel.Function, "options", Route = "super/summaries/generate")]
             HttpRequestData req)
         {
             return CreateNoContentResponse(req);
@@ -587,11 +587,11 @@ namespace EntityMatching.Functions
 
         /// <summary>
         /// Manually trigger summary generation for all entities
-        /// POST /api/admin/summaries/generate?limit=10
+        /// POST /api/super/summaries/generate?limit=10
         /// </summary>
         [Function("AdminGenerateSummaries")]
         public async Task<HttpResponseData> GenerateSummaries(
-            [HttpTrigger(AuthorizationLevel.Function, "post", Route = "admin/summaries/generate")]
+            [HttpTrigger(AuthorizationLevel.Function, "post", Route = "super/summaries/generate")]
             HttpRequestData req)
         {
             try
