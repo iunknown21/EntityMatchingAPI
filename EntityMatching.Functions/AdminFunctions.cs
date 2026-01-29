@@ -61,6 +61,27 @@ namespace EntityMatching.Functions
             _configuration = configuration;
         }
 
+        #region GET /api/admin/test - Simple test endpoint
+
+        /// <summary>
+        /// Simple test endpoint to verify admin routes work
+        /// GET /api/admin/test
+        /// </summary>
+        [Function("AdminTest")]
+        public HttpResponseData AdminTest(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "admin/test")] HttpRequestData req)
+        {
+            _logger.LogInformation("Admin test endpoint called");
+
+            var response = req.CreateResponse(HttpStatusCode.OK);
+            SetCorsHeaders(response);
+            response.WriteString("{\"status\":\"Admin endpoint working!\",\"timestamp\":\"" + DateTime.UtcNow.ToString("o") + "\"}");
+            response.Headers.Add("Content-Type", "application/json");
+            return response;
+        }
+
+        #endregion
+
         #region POST /api/admin/embeddings/process
 
         [Function("AdminProcessEmbeddingsOptions")]
