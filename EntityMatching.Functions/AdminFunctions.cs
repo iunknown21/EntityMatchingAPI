@@ -82,6 +82,27 @@ namespace EntityMatching.Functions
 
         #endregion
 
+        #region GET /api/testadmin - Test with different prefix
+
+        /// <summary>
+        /// Test endpoint with non-admin prefix
+        /// GET /api/testadmin
+        /// </summary>
+        [Function("TestAdmin")]
+        public HttpResponseData TestAdmin(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "testadmin")] HttpRequestData req)
+        {
+            _logger.LogInformation("TestAdmin endpoint called");
+
+            var response = req.CreateResponse(HttpStatusCode.OK);
+            SetCorsHeaders(response);
+            response.WriteString("{\"status\":\"TestAdmin endpoint working!\",\"timestamp\":\"" + DateTime.UtcNow.ToString("o") + "\"}");
+            response.Headers.Add("Content-Type", "application/json");
+            return response;
+        }
+
+        #endregion
+
         #region POST /api/admin/embeddings/process
 
         [Function("AdminProcessEmbeddingsOptions")]
