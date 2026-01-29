@@ -49,7 +49,7 @@ namespace EntityMatching.Infrastructure.Services
                 var containerProperties = new ContainerProperties
                 {
                     Id = _embeddingsContainerId,
-                    PartitionKeyPath = "/EntityId"
+                    PartitionKeyPath = "/entityId"  // CRITICAL: Must match JSON property name (lowercase)
                 };
 
                 // Serverless mode - no throughput parameter
