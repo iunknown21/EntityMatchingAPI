@@ -8,6 +8,7 @@ using EntityMatching.Core.Interfaces;
 using EntityMatching.Core.Models.Search;
 using EntityMatching.Infrastructure.Services;
 using System;
+using System.Reflection;
 
 namespace EntityMatching.Functions
 {
@@ -16,6 +17,17 @@ namespace EntityMatching.Functions
         public static void Main(string[] args)
         {
             Console.WriteLine("=== EntityMatching Functions Starting ===");
+
+            // Version and build information for deployment verification
+            var assembly = Assembly.GetExecutingAssembly();
+            var version = assembly.GetName().Version;
+            var buildDate = new System.IO.FileInfo(assembly.Location).LastWriteTime;
+            var informationalVersion = assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion;
+
+            Console.WriteLine($"Version: {version}");
+            Console.WriteLine($"Informational Version: {informationalVersion ?? "N/A"}");
+            Console.WriteLine($"Build Date: {buildDate:yyyy-MM-dd HH:mm:ss} UTC");
+            Console.WriteLine($"Build Date (Ticks): {buildDate.Ticks}");
             Console.WriteLine($"Args: {string.Join(", ", args)}");
             Console.WriteLine($"Current Directory: {Environment.CurrentDirectory}");
             Console.WriteLine($"Base Directory: {AppDomain.CurrentDomain.BaseDirectory}");
