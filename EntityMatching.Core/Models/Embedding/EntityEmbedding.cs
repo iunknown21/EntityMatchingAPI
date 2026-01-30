@@ -18,7 +18,7 @@ namespace EntityMatching.Core.Models.Embedding
 
     /// <summary>
     /// Stores entity embeddings for semantic search and matching
-    /// Cosmos DB Container: embeddings (partition key: /entityId)
+    /// Cosmos DB Container: embeddings (partition key: /id)
     /// </summary>
     public class EntityEmbedding
     {
