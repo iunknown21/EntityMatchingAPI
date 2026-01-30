@@ -102,7 +102,14 @@ namespace EntityMatching.Functions
                         });
 
                         Console.WriteLine("  Registering ConversationService...");
-                        services.AddScoped<IConversationService, ConversationService>();
+                        services.AddScoped<IConversationService>(sp =>
+                        {
+                            var cosmosClient = sp.GetRequiredService<CosmosClient>();
+                            var config = sp.GetRequiredService<IConfiguration>();
+                            var httpClient = sp.GetRequiredService<IHttpClientFactory>().CreateClient();
+                            var logger = sp.GetRequiredService<ILogger<ConversationService>>();
+                            return new ConversationService(cosmosClient, config, httpClient, logger);
+                        });
 
                         // Entity Summary Service with Strategy Pattern
                         Console.WriteLine("  Registering Entity Summary Strategies...");
