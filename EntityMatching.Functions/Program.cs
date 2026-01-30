@@ -58,7 +58,13 @@ namespace EntityMatching.Functions
                                 var cosmosConnectionString = configuration["CosmosDb:ConnectionString"]
                                     ?? configuration["CosmosDb__ConnectionString"];
                                 Console.WriteLine("    Creating CosmosClient...");
-                                return new CosmosClient(cosmosConnectionString);
+                                return new CosmosClient(cosmosConnectionString, new CosmosClientOptions
+                                {
+                                    SerializerOptions = new CosmosSerializationOptions
+                                    {
+                                        PropertyNamingPolicy = CosmosPropertyNamingPolicy.CamelCase
+                                    }
+                                });
                             }
                             catch (Exception ex)
                             {

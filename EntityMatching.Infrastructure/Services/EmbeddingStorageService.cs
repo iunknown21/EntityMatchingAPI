@@ -49,7 +49,7 @@ namespace EntityMatching.Infrastructure.Services
                 var containerProperties = new ContainerProperties
                 {
                     Id = _embeddingsContainerId,
-                    PartitionKeyPath = "/id"  // CRITICAL: Must match existing container partition key
+                    PartitionKeyPath = "/entityId"  // CRITICAL: Must match JSON property name (camelCase)
                 };
 
                 // Serverless mode - no throughput parameter
@@ -71,7 +71,7 @@ namespace EntityMatching.Infrastructure.Services
                 var id = EntityEmbedding.GenerateId(EntityId);
                 var response = await _embeddingsContainer.ReadItemAsync<EntityEmbedding>(
                     id,
-                    new PartitionKey(id)
+                    new PartitionKey(EntityId)
                 );
 
                 return response.Resource;
@@ -93,7 +93,7 @@ namespace EntityMatching.Infrastructure.Services
             {
                 var response = await _embeddingsContainer.UpsertItemAsync(
                     embedding,
-                    new PartitionKey(embedding.Id)
+                    new PartitionKey(embedding.EntityId)
                 );
 
                 _logger.LogInformation("Upserted embedding for profile {EntityId} with status {Status}",
@@ -115,7 +115,7 @@ namespace EntityMatching.Infrastructure.Services
                 var id = EntityEmbedding.GenerateId(EntityId);
                 await _embeddingsContainer.DeleteItemAsync<EntityEmbedding>(
                     id,
-                    new PartitionKey(id)
+                    new PartitionKey(EntityId)
                 );
 
                 _logger.LogInformation("Deleted embedding for profile {EntityId}", EntityId);
