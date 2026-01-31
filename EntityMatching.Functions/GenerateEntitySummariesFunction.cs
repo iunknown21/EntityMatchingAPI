@@ -23,7 +23,7 @@ namespace EntityMatching.Functions
     {
         private readonly IEntitySummaryService _summaryService;
         private readonly IEmbeddingStorageService _embeddingStorage;
-        private readonly IConversationService _conversationService;
+        private readonly IConversationService? _conversationService;
         private readonly CosmosClient _cosmosClient;
         private readonly IConfiguration _configuration;
         private readonly ILogger<GenerateEntitySummariesFunction> _logger;
@@ -31,10 +31,10 @@ namespace EntityMatching.Functions
         public GenerateEntitySummariesFunction(
             IEntitySummaryService summaryService,
             IEmbeddingStorageService embeddingStorage,
-            IConversationService conversationService,
             CosmosClient cosmosClient,
             IConfiguration configuration,
-            ILogger<GenerateEntitySummariesFunction> logger)
+            ILogger<GenerateEntitySummariesFunction> logger,
+            IConversationService? conversationService = null)
         {
             _summaryService = summaryService;
             _embeddingStorage = embeddingStorage;
@@ -214,14 +214,21 @@ namespace EntityMatching.Functions
 
             // Load conversation context if it exists
             ConversationContext? conversation = null;
-            try
+            if (_conversationService != null)
             {
-                conversation = await _conversationService.GetConversationHistoryAsync(entityMeta.Id);
+                try
+                {
+                    conversation = await _conversationService.GetConversationHistoryAsync(entityMeta.Id);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogWarning(ex, "Could not load conversation for entity {EntityId}, continuing without it", entityMeta.Id);
+                    // Continue without conversation - not fatal
+                }
             }
-            catch (Exception ex)
+            else
             {
-                _logger.LogWarning(ex, "Could not load conversation for entity {EntityId}, continuing without it", entityMeta.Id);
-                // Continue without conversation - not fatal
+                _logger.LogDebug("ConversationService not available, skipping conversation context for entity {EntityId}", entityMeta.Id);
             }
 
             // Generate summary
