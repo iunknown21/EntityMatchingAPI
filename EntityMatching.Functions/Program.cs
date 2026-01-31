@@ -101,17 +101,15 @@ namespace EntityMatching.Functions
                             return new EntityService(cosmosClient, databaseId!, containerId, logger);
                         });
 
-                        // ConversationService disabled - not needed for entity matching
-                        // TODO: Adapt for entityId instead of profileId if needed
-                        Console.WriteLine("  Skipping ConversationService (not needed for entities)...");
-                        // services.AddScoped<IConversationService>(sp =>
-                        // {
-                        //     var cosmosClient = sp.GetRequiredService<CosmosClient>();
-                        //     var config = sp.GetRequiredService<IConfiguration>();
-                        //     var httpClient = sp.GetRequiredService<IHttpClientFactory>().CreateClient();
-                        //     var logger = sp.GetRequiredService<ILogger<ConversationService>>();
-                        //     return new ConversationService(cosmosClient, config, httpClient, logger);
-                        // });
+                        Console.WriteLine("  Registering ConversationService...");
+                        services.AddScoped<IConversationService>(sp =>
+                        {
+                            var cosmosClient = sp.GetRequiredService<CosmosClient>();
+                            var config = sp.GetRequiredService<IConfiguration>();
+                            var httpClient = sp.GetRequiredService<IHttpClientFactory>().CreateClient();
+                            var logger = sp.GetRequiredService<ILogger<ConversationService>>();
+                            return new ConversationService(cosmosClient, config, httpClient, logger);
+                        });
 
                         // Entity Summary Service with Strategy Pattern
                         Console.WriteLine("  Registering Entity Summary Strategies...");

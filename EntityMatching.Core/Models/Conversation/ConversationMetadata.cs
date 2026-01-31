@@ -4,17 +4,17 @@ using System;
 namespace EntityMatching.Core.Models.Conversation
 {
     /// <summary>
-    /// Metadata document tracking conversation state for a profile.
+    /// Metadata document tracking conversation state for an entity.
     /// Provides fast access to active document and aggregate statistics without querying all documents.
-    /// Cosmos DB Container: conversations (partition key: /profileId)
+    /// Cosmos DB Container: conversations (partition key: /entityId)
     /// </summary>
     public class ConversationMetadata
     {
         [JsonProperty(PropertyName = "id")]
-        public string Id { get; set; } = ""; // Format: "convmeta_{profileId}"
+        public string Id { get; set; } = ""; // Format: "convmeta_{entityId}"
 
-        [JsonProperty(PropertyName = "profileId")]
-        public string ProfileId { get; set; } = "";
+        [JsonProperty(PropertyName = "entityId")]
+        public string EntityId { get; set; } = "";
 
         [JsonProperty(PropertyName = "userId")]
         public string UserId { get; set; } = "";
@@ -41,8 +41,8 @@ namespace EntityMatching.Core.Models.Conversation
         public DateTime LastUpdated { get; set; } = DateTime.UtcNow;
 
         /// <summary>
-        /// Generate metadata document ID for a profile
+        /// Generate metadata document ID for an entity
         /// </summary>
-        public static string GenerateId(string profileId) => $"convmeta_{profileId}";
+        public static string GenerateId(string entityId) => $"convmeta_{entityId}";
     }
 }

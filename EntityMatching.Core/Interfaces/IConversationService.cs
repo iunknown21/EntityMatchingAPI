@@ -13,35 +13,35 @@ namespace EntityMatching.Core.Interfaces
         /// <summary>
         /// Process a user message, generate AI response, and extract insights
         /// </summary>
-        Task<ConversationResponse> ProcessUserMessageAsync(string profileId, string userId, string message);
+        Task<ConversationResponse> ProcessUserMessageAsync(string entityId, string userId, string message);
 
         /// <summary>
-        /// Get conversation history for a profile (aggregates all documents)
+        /// Get conversation history for an entity (aggregates all documents)
         /// </summary>
-        Task<ConversationContext?> GetConversationHistoryAsync(string profileId);
+        Task<ConversationContext?> GetConversationHistoryAsync(string entityId);
 
         /// <summary>
-        /// Clear conversation history for a profile (deletes all documents and metadata)
+        /// Clear conversation history for an entity (deletes all documents and metadata)
         /// </summary>
-        Task ClearConversationHistoryAsync(string profileId);
+        Task ClearConversationHistoryAsync(string entityId);
 
         /// <summary>
         /// Get summarized insights for use in prompts
         /// </summary>
-        Task<string> GetInsightsSummaryAsync(string profileId);
+        Task<string> GetInsightsSummaryAsync(string entityId);
 
         /// <summary>
-        /// Get conversation documents for a profile with optional pagination
+        /// Get conversation documents for an entity with optional pagination
         /// </summary>
         Task<List<ConversationDocument>> GetConversationDocumentsAsync(
-            string profileId,
+            string entityId,
             int? startSequence = null,
             int? limit = null);
 
         /// <summary>
-        /// Get conversation metadata for a profile
+        /// Get conversation metadata for an entity
         /// </summary>
-        Task<ConversationMetadata?> GetConversationMetadataAsync(string profileId);
+        Task<ConversationMetadata?> GetConversationMetadataAsync(string entityId);
     }
 
     /// <summary>

@@ -57,11 +57,11 @@ namespace EntityMatching.Infrastructure.Services
                 var database = _cosmosClient.GetDatabase(_databaseId);
 
                 // Create container if it doesn't exist
-                // Partition by profileId for efficient querying
+                // Partition by entityId for efficient querying
                 ContainerProperties containerProperties = new ContainerProperties
                 {
                     Id = ContainerName,
-                    PartitionKeyPath = "/profileId"
+                    PartitionKeyPath = "/entityId"
                 };
 
                 // Don't specify throughput - serverless mode compatible
@@ -78,17 +78,17 @@ namespace EntityMatching.Infrastructure.Services
         /// <summary>
         /// Process user message and generate AI response with insight extraction
         /// </summary>
-        public async Task<ConversationResponse> ProcessUserMessageAsync(string profileId, string userId, string message)
+        public async Task<ConversationResponse> ProcessUserMessageAsync(string entityId, string userId, string message)
         {
             try
             {
-                _logger.LogInformation("Processing conversation message for profile {ProfileId}", profileId);
+                _logger.LogInformation("Processing conversation message for entity {EntityId}", entityId);
 
                 // Get or create metadata
-                var metadata = await GetMetadataAsync(profileId);
+                var metadata = await GetMetadataAsync(entityId);
                 if (metadata == null)
                 {
-                    metadata = await CreateMetadataAsync(profileId, userId);
+                    metadata = await CreateMetadataAsync(entityId, userId);
                 }
 
                 // Get active document
@@ -120,10 +120,10 @@ namespace EntityMatching.Infrastructure.Services
                 {
                     // Mark current as inactive
                     activeDoc.IsActive = false;
-                    await _conversationContainer.UpsertItemAsync(activeDoc, new PartitionKey(profileId));
+                    await _conversationContainer.UpsertItemAsync(activeDoc, new PartitionKey(entityId));
 
-                    _logger.LogInformation("Creating new conversation document for profile {ProfileId}, sequence {Seq}",
-                        profileId, metadata.ActiveSequenceNumber + 1);
+                    _logger.LogInformation("Creating new conversation document for entity {EntityId}, sequence {Seq}",
+                        entityId, metadata.ActiveSequenceNumber + 1);
 
                     // Create new active document
                     activeDoc = await CreateNewDocumentAsync(metadata, userId);
@@ -139,13 +139,13 @@ namespace EntityMatching.Infrastructure.Services
                 activeDoc.LastUpdated = DateTime.UtcNow;
 
                 // Save active document
-                await _conversationContainer.UpsertItemAsync(activeDoc, new PartitionKey(profileId));
+                await _conversationContainer.UpsertItemAsync(activeDoc, new PartitionKey(entityId));
 
                 // Update metadata
                 metadata.TotalChunks += 2;
                 metadata.TotalInsights += newInsights.Count;
                 metadata.LastUpdated = DateTime.UtcNow;
-                await _conversationContainer.UpsertItemAsync(metadata, new PartitionKey(profileId));
+                await _conversationContainer.UpsertItemAsync(metadata, new PartitionKey(entityId));
 
                 _logger.LogInformation("Conversation processed. Doc size: {Size}KB, Total docs: {Docs}",
                     activeDoc.EstimatedSizeBytes / 1024, metadata.TotalDocuments);
@@ -159,19 +159,19 @@ namespace EntityMatching.Infrastructure.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error processing conversation message for profile {ProfileId}", profileId);
+                _logger.LogError(ex, "Error processing conversation message for entity {EntityId}", entityId);
                 throw;
             }
         }
 
         /// <summary>
-        /// Get conversation history for a profile (aggregates all documents)
+        /// Get conversation history for an entity (aggregates all documents)
         /// </summary>
-        public async Task<ConversationContext?> GetConversationHistoryAsync(string profileId)
+        public async Task<ConversationContext?> GetConversationHistoryAsync(string entityId)
         {
             try
             {
-                var documents = await GetAllDocumentsAsync(profileId);
+                var documents = await GetAllDocumentsAsync(entityId);
                 if (!documents.Any())
                     return null;
 
@@ -184,27 +184,27 @@ namespace EntityMatching.Infrastructure.Services
         }
 
         /// <summary>
-        /// Clear conversation history for a profile (deletes all documents and metadata)
+        /// Clear conversation history for an entity (deletes all documents and metadata)
         /// </summary>
-        public async Task ClearConversationHistoryAsync(string profileId)
+        public async Task ClearConversationHistoryAsync(string entityId)
         {
             // Delete all conversation documents
-            var allDocs = await GetAllDocumentsAsync(profileId);
+            var allDocs = await GetAllDocumentsAsync(entityId);
             foreach (var doc in allDocs)
             {
                 await _conversationContainer.DeleteItemAsync<ConversationDocument>(
                     doc.Id,
-                    new PartitionKey(profileId)
+                    new PartitionKey(entityId)
                 );
             }
 
             // Delete metadata
-            var metadataId = ConversationMetadata.GenerateId(profileId);
+            var metadataId = ConversationMetadata.GenerateId(entityId);
             try
             {
                 await _conversationContainer.DeleteItemAsync<ConversationMetadata>(
                     metadataId,
-                    new PartitionKey(profileId)
+                    new PartitionKey(entityId)
                 );
             }
             catch (CosmosException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
@@ -212,27 +212,27 @@ namespace EntityMatching.Infrastructure.Services
                 // Metadata doesn't exist, that's fine
             }
 
-            _logger.LogInformation("Cleared conversation history for profile {ProfileId}", profileId);
+            _logger.LogInformation("Cleared conversation history for entity {EntityId}", entityId);
         }
 
         /// <summary>
         /// Get formatted insights summary for use in AI prompts
         /// </summary>
-        public async Task<string> GetInsightsSummaryAsync(string profileId)
+        public async Task<string> GetInsightsSummaryAsync(string entityId)
         {
-            var context = await GetConversationHistoryAsync(profileId);
+            var context = await GetConversationHistoryAsync(entityId);
             return context?.GetInsightsSummary() ?? "";
         }
 
         /// <summary>
-        /// Get conversation documents for a profile with optional pagination
+        /// Get conversation documents for an entity with optional pagination
         /// </summary>
         public async Task<List<ConversationDocument>> GetConversationDocumentsAsync(
-            string profileId,
+            string entityId,
             int? startSequence = null,
             int? limit = null)
         {
-            var query = "SELECT * FROM c WHERE c.profileId = @profileId AND c.id != @metadataId";
+            var query = "SELECT * FROM c WHERE c.entityId = @entityId AND c.id != @metadataId";
 
             if (startSequence.HasValue)
                 query += " AND c.sequenceNumber >= @startSequence";
@@ -240,8 +240,8 @@ namespace EntityMatching.Infrastructure.Services
             query += " ORDER BY c.sequenceNumber ASC";
 
             var queryDef = new QueryDefinition(query)
-                .WithParameter("@profileId", profileId)
-                .WithParameter("@metadataId", ConversationMetadata.GenerateId(profileId));
+                .WithParameter("@entityId", entityId)
+                .WithParameter("@metadataId", ConversationMetadata.GenerateId(entityId));
 
             if (startSequence.HasValue)
                 queryDef = queryDef.WithParameter("@startSequence", startSequence.Value);
@@ -269,26 +269,26 @@ namespace EntityMatching.Infrastructure.Services
         }
 
         /// <summary>
-        /// Get conversation metadata for a profile
+        /// Get conversation metadata for an entity
         /// </summary>
-        public Task<ConversationMetadata?> GetConversationMetadataAsync(string profileId)
+        public Task<ConversationMetadata?> GetConversationMetadataAsync(string entityId)
         {
-            return GetMetadataAsync(profileId);
+            return GetMetadataAsync(entityId);
         }
 
         // ============= PRIVATE HELPER METHODS =============
 
         /// <summary>
-        /// Get conversation metadata for a profile
+        /// Get conversation metadata for an entity
         /// </summary>
-        private async Task<ConversationMetadata?> GetMetadataAsync(string profileId)
+        private async Task<ConversationMetadata?> GetMetadataAsync(string entityId)
         {
             try
             {
-                var id = ConversationMetadata.GenerateId(profileId);
+                var id = ConversationMetadata.GenerateId(entityId);
                 var response = await _conversationContainer.ReadItemAsync<ConversationMetadata>(
                     id,
-                    new PartitionKey(profileId)
+                    new PartitionKey(entityId)
                 );
                 return response.Resource;
             }
@@ -301,30 +301,30 @@ namespace EntityMatching.Infrastructure.Services
         /// <summary>
         /// Create new conversation metadata and first document
         /// </summary>
-        private async Task<ConversationMetadata> CreateMetadataAsync(string profileId, string userId)
+        private async Task<ConversationMetadata> CreateMetadataAsync(string entityId, string userId)
         {
             var firstDoc = new ConversationDocument
             {
-                ProfileId = profileId,
+                EntityId = entityId,
                 UserId = userId,
                 SequenceNumber = 0,
                 IsActive = true
             };
 
-            await _conversationContainer.UpsertItemAsync(firstDoc, new PartitionKey(profileId));
+            await _conversationContainer.UpsertItemAsync(firstDoc, new PartitionKey(entityId));
 
             var metadata = new ConversationMetadata
             {
-                Id = ConversationMetadata.GenerateId(profileId),
-                ProfileId = profileId,
+                Id = ConversationMetadata.GenerateId(entityId),
+                EntityId = entityId,
                 UserId = userId,
                 ActiveDocumentId = firstDoc.Id,
                 ActiveSequenceNumber = 0,
                 TotalDocuments = 1
             };
 
-            await _conversationContainer.UpsertItemAsync(metadata, new PartitionKey(profileId));
-            _logger.LogInformation("Created conversation metadata for profile {ProfileId}", profileId);
+            await _conversationContainer.UpsertItemAsync(metadata, new PartitionKey(entityId));
+            _logger.LogInformation("Created conversation metadata for entity {EntityId}", entityId);
             return metadata;
         }
 
@@ -335,21 +335,21 @@ namespace EntityMatching.Infrastructure.Services
         {
             var response = await _conversationContainer.ReadItemAsync<ConversationDocument>(
                 metadata.ActiveDocumentId,
-                new PartitionKey(metadata.ProfileId)
+                new PartitionKey(metadata.EntityId)
             );
             return response.Resource;
         }
 
         /// <summary>
-        /// Get all conversation documents for a profile, ordered by sequence number
+        /// Get all conversation documents for an entity, ordered by sequence number
         /// </summary>
-        private async Task<List<ConversationDocument>> GetAllDocumentsAsync(string profileId)
+        private async Task<List<ConversationDocument>> GetAllDocumentsAsync(string entityId)
         {
             var query = new QueryDefinition(
-                "SELECT * FROM c WHERE c.profileId = @profileId AND c.id != @metadataId ORDER BY c.sequenceNumber ASC"
+                "SELECT * FROM c WHERE c.entityId = @entityId AND c.id != @metadataId ORDER BY c.sequenceNumber ASC"
             )
-            .WithParameter("@profileId", profileId)
-            .WithParameter("@metadataId", ConversationMetadata.GenerateId(profileId));
+            .WithParameter("@entityId", entityId)
+            .WithParameter("@metadataId", ConversationMetadata.GenerateId(entityId));
 
             var iterator = _conversationContainer.GetItemQueryIterator<ConversationDocument>(query);
             var results = new List<ConversationDocument>();
@@ -381,21 +381,21 @@ namespace EntityMatching.Infrastructure.Services
         {
             var newDoc = new ConversationDocument
             {
-                ProfileId = metadata.ProfileId,
+                EntityId = metadata.EntityId,
                 UserId = userId,
                 SequenceNumber = metadata.ActiveSequenceNumber + 1,
                 IsActive = true
             };
 
-            await _conversationContainer.UpsertItemAsync(newDoc, new PartitionKey(metadata.ProfileId));
+            await _conversationContainer.UpsertItemAsync(newDoc, new PartitionKey(metadata.EntityId));
 
             // Update metadata
             metadata.ActiveDocumentId = newDoc.Id;
             metadata.ActiveSequenceNumber = newDoc.SequenceNumber;
             metadata.TotalDocuments++;
 
-            _logger.LogInformation("Created new conversation document for profile {ProfileId}, sequence {Seq}",
-                metadata.ProfileId, newDoc.SequenceNumber);
+            _logger.LogInformation("Created new conversation document for entity {EntityId}, sequence {Seq}",
+                metadata.EntityId, newDoc.SequenceNumber);
 
             return newDoc;
         }

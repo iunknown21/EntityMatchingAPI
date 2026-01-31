@@ -45,16 +45,16 @@ namespace EntityMatching.Core.Models.Conversation
     }
 
     /// <summary>
-    /// Stores conversation history and extracted insights for a profile
-    /// Cosmos DB Container: conversations (partition key: /profileId)
+    /// Stores conversation history and extracted insights for an entity
+    /// Cosmos DB Container: conversations (partition key: /entityId)
     /// </summary>
     public class ConversationContext
     {
         [JsonProperty(PropertyName = "id")]
         public string Id { get; set; } = Guid.NewGuid().ToString();
 
-        [JsonProperty(PropertyName = "profileId")]
-        public string ProfileId { get; set; } = "";
+        [JsonProperty(PropertyName = "entityId")]
+        public string EntityId { get; set; } = "";
 
         [JsonProperty(PropertyName = "userId")]
         public string UserId { get; set; } = ""; // Owner of the conversation
@@ -127,7 +127,7 @@ namespace EntityMatching.Core.Models.Conversation
             var context = new ConversationContext
             {
                 Id = first.Id,
-                ProfileId = first.ProfileId,
+                EntityId = first.EntityId,
                 UserId = first.UserId,
                 CreatedAt = first.CreatedAt,
                 LastUpdated = sorted.Last().LastUpdated,

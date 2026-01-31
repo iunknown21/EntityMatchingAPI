@@ -5,17 +5,17 @@ using System.Collections.Generic;
 namespace EntityMatching.Core.Models.Conversation
 {
     /// <summary>
-    /// Represents a single conversation document (one of potentially many for a profile).
+    /// Represents a single conversation document (one of potentially many for an entity).
     /// Used to split large conversations across multiple Cosmos DB documents to avoid 2MB limit.
-    /// Cosmos DB Container: conversations (partition key: /profileId)
+    /// Cosmos DB Container: conversations (partition key: /entityId)
     /// </summary>
     public class ConversationDocument
     {
         [JsonProperty(PropertyName = "id")]
         public string Id { get; set; } = Guid.NewGuid().ToString();
 
-        [JsonProperty(PropertyName = "profileId")]
-        public string ProfileId { get; set; } = "";
+        [JsonProperty(PropertyName = "entityId")]
+        public string EntityId { get; set; } = "";
 
         [JsonProperty(PropertyName = "userId")]
         public string UserId { get; set; } = "";

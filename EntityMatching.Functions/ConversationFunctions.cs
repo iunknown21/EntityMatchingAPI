@@ -148,7 +148,7 @@ namespace EntityMatching.Functions
                     conversation = new ConversationContext
                     {
                         Id = Guid.NewGuid().ToString(),
-                        ProfileId = entityId
+                        EntityId = entityId
                     };
                 }
 
