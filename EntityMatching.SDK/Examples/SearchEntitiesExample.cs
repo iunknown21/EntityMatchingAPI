@@ -1,6 +1,5 @@
 using EntityMatching.Core.Models.Search;
 using EntityMatching.SDK;
-using SearchResult = ProfileMatching.Core.Models.Search.SearchResult;
 
 namespace EntityMatching.SDK.Examples;
 
@@ -14,10 +13,10 @@ public static class SearchProfilesExample
 {
     public static async Task RunAsync()
     {
-        var client = new ProfileMatchingClient(new ProfileMatchingClientOptions
+        var client = new EntityMatchingClient(new EntityMatchingClientOptions
         {
-            ApiKey = Environment.GetEnvironmentVariable("PROFILEMATCHING_API_KEY") ?? "your-api-key",
-            BaseUrl = "https://profileaiapi.azurewebsites.net"
+            ApiKey = Environment.GetEnvironmentVariable("ENTITYMATCHING_API_KEY") ?? "your-api-key",
+            BaseUrl = "https://entityaiapi.azurewebsites.net"
         });
 
         // Example 1: Simple semantic search
