@@ -42,6 +42,14 @@ public class EntitiesEndpoint
     }
 
     /// <summary>
+    /// Create multiple entities in bulk
+    /// </summary>
+    public async Task<List<Entity>> CreateBulkAsync(List<Entity> entities)
+    {
+        return await _http.PostAsync<List<Entity>>("/api/v1/entities/bulk", entities);
+    }
+
+    /// <summary>
     /// Update an existing profile
     /// </summary>
     public async Task<Entity> UpdateAsync(Guid entityId, Entity profile)
