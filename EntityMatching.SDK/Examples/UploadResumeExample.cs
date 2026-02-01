@@ -8,18 +8,18 @@ namespace EntityMatching.SDK.Examples;
 ///
 /// This example demonstrates how to upload a resume without sending the text to the server.
 /// The resume text is processed locally to generate an embedding vector, and only the vector
-/// is uploaded to the ProfileMatchingAPI.
+/// is uploaded to the EntityMatchingAPI.
 /// </summary>
 public static class UploadResumeExample
 {
     public static async Task RunAsync()
     {
         // Initialize the client
-        var client = new ProfileMatchingClient(new ProfileMatchingClientOptions
+        var client = new EntityMatchingClient(new EntityMatchingClientOptions
         {
-            ApiKey = Environment.GetEnvironmentVariable("PROFILEMATCHING_API_KEY") ?? "your-api-key",
+            ApiKey = Environment.GetEnvironmentVariable("ENTITYMATCHING_API_KEY") ?? "your-api-key",
             OpenAIKey = Environment.GetEnvironmentVariable("OPENAI_API_KEY") ?? "your-openai-key",
-            BaseUrl = "https://profileaiapi.azurewebsites.net" // Or https://api.bystorm.com when APIM is ready
+            BaseUrl = "https://entityaiapi.azurewebsites.net" // Or https://api.bystorm.com when APIM is ready
         });
 
         // Step 1: Create a profile (or use existing profile ID)
