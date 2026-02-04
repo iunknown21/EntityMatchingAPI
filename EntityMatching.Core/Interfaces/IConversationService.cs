@@ -13,7 +13,8 @@ namespace EntityMatching.Core.Interfaces
         /// <summary>
         /// Process a user message, generate AI response, and extract insights
         /// </summary>
-        Task<ConversationResponse> ProcessUserMessageAsync(string entityId, string userId, string message);
+        /// <param name="systemPrompt">Required for new conversations. Stored in metadata and reused for subsequent messages.</param>
+        Task<ConversationResponse> ProcessUserMessageAsync(string entityId, string userId, string message, string? systemPrompt = null);
 
         /// <summary>
         /// Get conversation history for an entity (aggregates all documents)

@@ -86,7 +86,7 @@ namespace EntityMatching.Functions
                 _logger.LogInformation("Processing conversation message for profile {entityId}", entityId);
 
                 // Send message to conversation service
-                var result = await _conversationService.ProcessUserMessageAsync(entityId, request.UserId ?? "", request.Message);
+                var result = await _conversationService.ProcessUserMessageAsync(entityId, request.UserId ?? "", request.Message, request.SystemPrompt);
 
                 var response = req.CreateResponse(HttpStatusCode.OK);
                 SetCorsHeaders(response);
@@ -226,6 +226,7 @@ namespace EntityMatching.Functions
         {
             public string Message { get; set; } = "";
             public string? UserId { get; set; }
+            public string? SystemPrompt { get; set; }
         }
     }
 }

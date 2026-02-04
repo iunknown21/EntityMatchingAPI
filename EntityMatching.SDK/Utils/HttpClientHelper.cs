@@ -27,6 +27,7 @@ internal class HttpClientHelper
     {
         _httpClient.DefaultRequestHeaders.Clear();
         _httpClient.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", _apiKey);
+        _httpClient.DefaultRequestHeaders.Add("x-functions-key", _apiKey); // For Azure Functions auth
         _httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
     }
 

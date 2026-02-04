@@ -24,7 +24,7 @@ namespace EntityMatching.Functions.Common
         protected void SetCorsHeaders(HttpResponseData response)
         {
             response.Headers.Add("Access-Control-Allow-Origin",
-                "http://localhost:5001,https://localhost:5001,https://datenightplanner.com,https://api.bystorm.com");
+                "http://localhost:5000,https://localhost:5001,http://localhost:5001,https://localhost:7131,https://datenightplanner.com,https://api.bystorm.com");
             response.Headers.Add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
             response.Headers.Add("Access-Control-Allow-Headers", "*");
             response.Headers.Add("Access-Control-Allow-Credentials", "true");

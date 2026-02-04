@@ -17,6 +17,7 @@ namespace EntityMatching.Infrastructure.Services
     public class ConversationService : IConversationService
     {
         private readonly Container _conversationContainer;
+        private readonly Container _entitiesContainer;
         private readonly CosmosClient _cosmosClient;
         private readonly string _databaseId;
         private readonly HttpClient _httpClient;
@@ -37,6 +38,7 @@ namespace EntityMatching.Infrastructure.Services
             _cosmosClient = cosmosClient;
             _databaseId = configuration["CosmosDb:DatabaseId"];
             _conversationContainer = cosmosClient.GetDatabase(_databaseId).GetContainer(ContainerName);
+            _entitiesContainer = cosmosClient.GetDatabase(_databaseId).GetContainer("entities");
             _httpClient = httpClient;
             _groqApiKey = configuration["ApiKeys:Groq"] ?? configuration["ApiKeys__Groq"];
             _logger = logger;
@@ -78,24 +80,40 @@ namespace EntityMatching.Infrastructure.Services
         /// <summary>
         /// Process user message and generate AI response with insight extraction
         /// </summary>
-        public async Task<ConversationResponse> ProcessUserMessageAsync(string entityId, string userId, string message)
+        public async Task<ConversationResponse> ProcessUserMessageAsync(string entityId, string userId, string message, string? systemPrompt = null)
         {
             try
             {
                 _logger.LogInformation("Processing conversation message for entity {EntityId}", entityId);
 
+                // Get entity to verify it exists
+                var entity = await GetEntityAsync(entityId);
+                if (entity == null)
+                {
+                    throw new InvalidOperationException($"Entity {entityId} not found");
+                }
+
                 // Get or create metadata
                 var metadata = await GetMetadataAsync(entityId);
                 if (metadata == null)
                 {
-                    metadata = await CreateMetadataAsync(entityId, userId);
+                    // New conversation - systemPrompt is required
+                    if (string.IsNullOrEmpty(systemPrompt))
+                    {
+                        throw new InvalidOperationException("systemPrompt is required for new conversations");
+                    }
+                    metadata = await CreateMetadataAsync(entityId, userId, systemPrompt);
                 }
 
                 // Get active document
                 var activeDoc = await GetActiveDocumentAsync(metadata);
 
-                // Generate AI response using current context
-                var aiResponse = await GenerateAIResponseAsync(activeDoc, message);
+                // Use stored system prompt from metadata (set during conversation creation)
+                var effectivePrompt = metadata.SystemPrompt
+                    ?? throw new InvalidOperationException("No system prompt found in conversation metadata");
+
+                // Generate AI response using current context and stored prompt
+                var aiResponse = await GenerateAIResponseAsync(activeDoc, message, effectivePrompt);
 
                 // Extract insights
                 var newInsights = await ExtractInsightsAsync(message, aiResponse, activeDoc);
@@ -301,7 +319,7 @@ namespace EntityMatching.Infrastructure.Services
         /// <summary>
         /// Create new conversation metadata and first document
         /// </summary>
-        private async Task<ConversationMetadata> CreateMetadataAsync(string entityId, string userId)
+        private async Task<ConversationMetadata> CreateMetadataAsync(string entityId, string userId, string systemPrompt)
         {
             var firstDoc = new ConversationDocument
             {
@@ -320,7 +338,8 @@ namespace EntityMatching.Infrastructure.Services
                 UserId = userId,
                 ActiveDocumentId = firstDoc.Id,
                 ActiveSequenceNumber = 0,
-                TotalDocuments = 1
+                TotalDocuments = 1,
+                SystemPrompt = systemPrompt
             };
 
             await _conversationContainer.UpsertItemAsync(metadata, new PartitionKey(entityId));
@@ -401,9 +420,25 @@ namespace EntityMatching.Infrastructure.Services
         }
 
         /// <summary>
+        /// Get entity from database
+        /// </summary>
+        private async Task<Entity?> GetEntityAsync(string entityId)
+        {
+            try
+            {
+                var response = await _entitiesContainer.ReadItemAsync<Entity>(entityId, new PartitionKey(entityId));
+                return response.Resource;
+            }
+            catch (CosmosException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
         /// Generate AI response using Groq
         /// </summary>
-        private async Task<string> GenerateAIResponseAsync(ConversationDocument doc, string userMessage)
+        private async Task<string> GenerateAIResponseAsync(ConversationDocument doc, string userMessage, string systemPrompt)
         {
             try
             {
@@ -415,10 +450,6 @@ namespace EntityMatching.Infrastructure.Services
                         .Reverse()
                         .Select(c => $"{c.Speaker}: {c.Text}")
                 );
-                var systemPrompt = @"You are a thoughtful assistant helping someone learn more about their romantic partner or dating interest.
-Ask follow-up questions to understand their partner's interests, preferences, personality, hobbies, and lifestyle.
-Keep responses conversational, warm, and genuinely curious. Focus on discovering details that would help plan meaningful dates or choose thoughtful gifts.
-Don't be overly formal - chat naturally as if you're a friend helping them plan something special.";
 
                 var requestBody = new
                 {

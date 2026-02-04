@@ -23,10 +23,11 @@ public class ConversationsEndpoint
     /// <param name="entityId">Entity ID to build conversation for</param>
     /// <param name="userId">User ID sending the message</param>
     /// <param name="message">Message containing profile information</param>
+    /// <param name="systemPrompt">System prompt defining the conversation behavior. REQUIRED for first message in a new conversation, optional for subsequent messages (uses stored prompt).</param>
     /// <returns>AI response with extracted insights</returns>
-    public async Task<ConversationResponse> SendMessageAsync(Guid entityId, string userId, string message)
+    public async Task<ConversationResponse> SendMessageAsync(Guid entityId, string userId, string message, string? systemPrompt = null)
     {
-        var request = new { Message = message, UserId = userId };
+        var request = new { Message = message, UserId = userId, SystemPrompt = systemPrompt };
         return await _http.PostAsync<ConversationResponse>(
             $"/api/v1/entities/{entityId}/conversation",
             request);

@@ -40,6 +40,9 @@ namespace EntityMatching.Core.Models.Conversation
         [JsonProperty(PropertyName = "lastUpdated")]
         public DateTime LastUpdated { get; set; } = DateTime.UtcNow;
 
+        [JsonProperty(PropertyName = "systemPrompt")]
+        public string? SystemPrompt { get; set; }
+
         /// <summary>
         /// Generate metadata document ID for an entity
         /// </summary>
